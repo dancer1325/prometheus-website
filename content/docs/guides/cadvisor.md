@@ -2,15 +2,30 @@
 title: Monitoring Docker container metrics using cAdvisor
 ---
 
-# Monitoring Docker container metrics using cAdvisor
+# Monitoring Docker container metrics -- via -- cAdvisor
 
-[cAdvisor](https://github.com/google/cadvisor) (short for **c**ontainer **Advisor**) analyzes and exposes resource usage and performance data from running containers. cAdvisor exposes Prometheus metrics out of the box. In this guide, we will:
+* goal
+  * create a local multi-container -- via -- [Docker Compose](https://docs.docker.com/compose/) / includes containers running
+    * Prometheus,
+    * cAdvisor,
+    * [Redis](https://redis.io/) server
+  * how will it work?
+    * examine some container metrics / 
+      * -- produced by the -- Redis container,
+      * -- collected by -- cAdvisor,
+      * -- scraped by -- Prometheus
 
-* create a local multi-container [Docker Compose](https://docs.docker.com/compose/) installation that includes containers running Prometheus, cAdvisor, and a [Redis](https://redis.io/) server, respectively
-* examine some container metrics produced by the Redis container, collected by cAdvisor, and scraped by Prometheus
+* [cAdvisor](https://github.com/google/cadvisor)
+  * == **c**ontainer **Advisor** 
+  * | running containers
+    * about resource usage and performance data
+      * analyzes
+      * expose
+        * _Example:_ expose Prometheus metrics / out of the box
 
 ## Prometheus configuration
 
+* TODO:
 First, you'll need to [configure Prometheus](/docs/prometheus/latest/configuration/configuration) to scrape metrics from cAdvisor. Create a `prometheus.yml` file and populate it with this configuration:
 
 ```yaml
