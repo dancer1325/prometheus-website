@@ -5,59 +5,79 @@ sort_rank: 1
 
 # Data model
 
-Prometheus fundamentally stores all data as [_time
-series_](http://en.wikipedia.org/wiki/Time_series): streams of timestamped
-values belonging to the same metric and the same set of labeled dimensions.
-Besides stored time series, Prometheus may generate temporary derived time series
-as the result of queries.
+* ⭐️[_time series_](http://en.wikipedia.org/wiki/Time_series) ⭐️
+  * == streams of timestamped values / belong to the SAME
+    * metric
+    * set of labeled dimensions
+  * == data model / 
+    * uses
+      * 👀MOST used one by Prometheus -- to store -- ALL data 👀
+  * temporary derived time series
+    * == Prometheus query results
 
 ## Metric names and labels
 
-Every time series is uniquely identified by its metric name and optional key-value pairs called labels.
+* **Metric names**
+  * allows
+    * specifying the general feature of a system / it's measured
+      * _Example:_ `http_requests_total` == total # of HTTP requests received
+  * requirements
+    * match the regex `[a-zA-Z_:][a-zA-Z0-9_:]*`
+  * may contain
+    * ASCII letters,
+    * digits,
+    * underscores,
+    * colons
+      * reserved for user defined recording rules
+        * NOT valid to -- be used by -- exporters or direct instrumentation
+  * uses
+    * ⚠️identify UNIQUELY time series -> MANDATORY ⚠️
+  * see [best practices for naming metrics and labels](/docs/practices/naming/)
 
-***Metric names:***
-
- * Specify the general feature of a system that is measured (e.g. `http_requests_total` - the total number of HTTP requests received). 
- * Metric names may contain ASCII letters, digits, underscores, and colons. It must match the regex `[a-zA-Z_:][a-zA-Z0-9_:]*`.
-   
-Note: The colons are reserved for user defined recording rules. They should not be used by exporters or direct instrumentation.
-
-
-
-***Metric labels:***
-
- * Enable Prometheus's dimensional data model to identify any given combination of labels for the same metric name. It identifies a particular dimensional instantiation of that metric (for example: all HTTP requests that used the method `POST` to the `/api/tracks` handler). The query language allows filtering and aggregation based on these dimensions. 
- * The change of any label's value, including adding or removing labels, will create a new time series.
- * Labels may contain ASCII letters, numbers, as well as underscores. They must match the regex `[a-zA-Z_][a-zA-Z0-9_]*`. 
- * Label names beginning with `__` (two "_") are reserved for internal use.
- * Label values may contain any Unicode characters.
- * Labels with an empty label value are considered equivalent to labels that do not exist.
-
-
-See also the [best practices for naming metrics and labels](/docs/practices/naming/).
+* **Metric labels**
+  * == key-value pairs
+    * optional
+  * enable Prometheus's dimensional data model
+    * allows
+      * identify
+        * ANY given combination of labels / SAME metric name
+        * particular dimensional instantiation of that metric 
+          * _Example:_ ALL HTTP requests / used the method `POST` `/api/tracks` 
+    * uses
+      * query language can filter and aggregate -- based on -- these dimensions
+  * requirements
+    * `[a-zA-Z_][a-zA-Z0-9_]*`
+  * may contain
+    * ASCII letters,
+    * numbers,
+  * naming rules
+    * NOT beginning with `__` (two "_")
+      * Reason: 🧠RESERVED for internal use 🧠
+    * see [best practices for naming metrics and labels](/docs/practices/naming/)
+  * 's value
+    * may contain 
+      * ANY Unicode characters
+    * change (_Example:_ add or remove) -> will create a NEW time series
+    * if it's empty == labels / NOT exist
 
 ## Samples
 
-Samples form the actual time series data. Each sample consists of:
+* 👀== actual time series data 👀
+* 👀== float64 value + millisecond-precision timestamp 👀
+  * float64 value
+    * | Prometheus v2.40+ / experimental 
+      * -- can be replaced by -- full histogram
 
-   * a float64 value
-   * a millisecond-precision timestamp
+## Notation 
 
-NOTE: Beginning with Prometheus v2.40, there is experimental support for native
-histograms. Instead of a simple float64, the sample value may now take the form
-of a full histogram.
-
-## Notation
-
-Given a metric name and a set of labels, time series are frequently identified
-using this notation:
-
-    <metric name>{<label name>=<label value>, ...}
-
-For example, a time series with the metric name `api_http_requests_total` and
-the labels `method="POST"` and `handler="/messages"` could be written like
-this:
-
+* Notation of time series
+  ```
+  <metric name>{<label name>=<label value>, ...}
+  ```
+  
+  * _Example:_ 
+    ```
     api_http_requests_total{method="POST", handler="/messages"}
+    ```
 
-This is the same notation that [OpenTSDB](http://opentsdb.net/) uses.
+  * == notation of [OpenTSDB](http://opentsdb.net/) 
