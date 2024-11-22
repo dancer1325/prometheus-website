@@ -5,14 +5,20 @@ sort_rank: 6
 
 # Recording rules
 
-A consistent naming scheme for [recording rules](/docs/prometheus/latest/configuration/recording_rules/)
-makes it easier to interpret the meaning of a rule at a glance. It also avoids
-mistakes by making incorrect or meaningless calculations stand out.
-
-This page documents proper naming conventions and aggregation for recording rules.
+* see [recording rules](/docs/prometheus/latest/configuration/recording_rules/)
+* goal
+  * for recording rules
+    * proper naming conventions
+    * aggregation
 
 ## Naming 
 
+* consistent naming scheme
+  * allows
+    * making it easier to interpret the meaning of a rule 
+    * avoids mistakes -- by standing out -- incorrect or meaningless calculations
+
+* TODO:
 * Recording rules should be of the general form `level:metric:operations`.
 * `level` represents the aggregation level and labels of the rule output.
 * `metric` is the metric name and should be unchanged other than stripping `_total` off counters when using `rate()` or `irate()`.
@@ -31,11 +37,12 @@ doing division, separate the metrics using `_per_` and call the operation
 
 ## Aggregation
 
-* When aggregating up ratios, aggregate up the numerator and denominator
-separately and then divide.
-* Do not take the average of a ratio or average of an
-average, as that is not statistically valid.
-
+* if you want to aggregate up ratios ->
+  * aggregate up, separately, the numerator and denominator
+  * divide
+* NOT take the average of a ratio OR average of an average
+  * Reason: 🧠 NOT statistically valid 🧠
+* TODO:
 * When aggregating up the `_count` and `_sum` of a Summary and dividing to
 calculate average observation size, treating it as a ratio would be unwieldy.
 Instead keep the metric name without the `_count` or `_sum` suffix and replace
