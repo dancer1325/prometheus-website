@@ -5,14 +5,24 @@ sort_rank: 2
 
 # Metric types
 
-The Prometheus client libraries offer four core metric types. These are
-currently only differentiated in the client libraries (to enable APIs tailored
-to the usage of the specific types) and in the wire protocol. The Prometheus
-server does not yet make use of the type information and flattens all data into
-untyped time series. This may change in the future.
+* Prometheus client libraries' core metric types
+  * are
+    * `counter`
+    * `gauge`
+    * `histogram`
+    * `summary`
+  * uses /
+    * can distinguish them
+      * client libraries
+        * _Example of use:_ enable APIs -- based on the -- usage of the specific types
+      * wire protocol 
+    * can NOT distinguish them
+      * Prometheus server
+        * ALL data -- is flatten into -- untyped time series
 
 ## Counter
 
+* TODO:
 A _counter_ is a cumulative metric that represents a single [monotonically 
 increasing counter](https://en.wikipedia.org/wiki/Monotonic_function) whose
 value can only increase or be reset to zero on restart. For example, you can
