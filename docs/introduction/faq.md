@@ -8,27 +8,41 @@ sort_rank: 5
 
 ### What is Prometheus?
 
-Prometheus is an open-source systems monitoring and alerting toolkit
-with an active ecosystem.
-It is the only system directly supported by [Kubernetes](https://kubernetes.io/) and the de facto standard across the [cloud native ecosystem](https://landscape.cncf.io/).
-See the [overview](/docs/introduction/overview/).
+* [here](/prometheus-website/src/components/Hero.md)
 
-### How does Prometheus compare against other monitoring systems?
+### Prometheus vs alternatives
 
-See the [comparison](/docs/introduction/comparison/) page.
+* [comparison](comparison.md)
 
-### What dependencies does Prometheus have?
+### What dependencies does Prometheus Server have?
 
-The main Prometheus server runs standalone as a single monolithic binary and has no external dependencies.
+* main Prometheus server
+  * 👀runs standalone -- as a -- 1! monolithic binary / NO external dependencies👀
 
 #### Is this cloud native?
 
-Yes.
+* yes
 
-Cloud native is a flexible operating model, breaking up old service boundaries to allow for more flexible and scalable deployments.
+* Cloud native
+  * == 👀operating model👀 /
+    * enable deployments, MORE
+      * flexible
+      * scalable
+  * != old service boundaries  
+  * how does it got?
+    * Prometheus's 
+      * [service discovery](https://prometheus.io/docs/prometheus/latest/configuration/configuration/) integrates -- with -- MOST tools & clouds
+      * dimensional data model + scale | 10M of active series
+        * allows
+          * monitor large cloud-native deployments
 
-Prometheus's [service discovery](https://prometheus.io/docs/prometheus/latest/configuration/configuration/) integrates with most tools and clouds. Its dimensional data model and scale into the tens of millions of active series allows it to monitor large cloud-native deployments.
-There are always trade-offs to make when running services, and Prometheus values reliably getting alerts out to humans above all else.
+* Prometheus'
+  * design
+    * ALWAYS working alerts -> got notifications
+  * trade-offs
+    * NO 100% accurate
+    * COMPLEX functions
+    * native long storage
 
 ### Can Prometheus be made highly available?
 
