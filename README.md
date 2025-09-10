@@ -1,30 +1,20 @@
 # Prometheus Documentation
 
-This repository contains both the content and the static-site generator code for the
-Prometheus documentation site.
+## Documentation
 
-## Contributing Changes
-
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for general instructions for new Prometheus contributors.
-
-The main documentation contents of this website are located in the [`content/docs`](content/docs) directory.
-
-Documentation concerning the Prometheus server is [maintained in the Prometheus server repository](https://github.com/prometheus/prometheus/tree/main/docs) and cloned into the website at build time.
-
-As a guideline, please keep the documentation generally applicable and avoid use-case-specific changes.
+* [here](content/docs)
+* [Prometheus server documentation](https://github.com/prometheus/prometheus/tree/main/docs)
 
 ## Prerequisites
 
-You need to have a working Ruby environment set up (including [bundler](https://bundler.io/))
-and then install the necessary gems:
+* install
+  * Ruby
+  * [bundler](https://bundler.io/)
+* `make bundle`
 
-```bash
-make bundle
-```
+## how to build?
 
-## Building
-
-To generate the static site, run:
+* TODO: To generate the static site, run:
 
 ```bash
 make build
@@ -37,7 +27,7 @@ Optionally, you can use an API token to avoid rate limits on the API. You can ge
 export GITHUB_AUTHENTICATION='-u user:token'
 ```
 
-## Development Server
+## how to deploy locally?
 
 To run a local server that displays the generated site, run:
 
@@ -68,7 +58,3 @@ Netlify also creates preview deploys for every pull request. To view these for a
 2. On the "deploy/netlify" entry, click on "Details" to view the preview site for the PR.
 
 You may have to wait a while for the "deploy/netlify" check to appear after creating or updating the PR, even if the other checks have already passed.
-
-## License
-
-Apache License 2.0, see [LICENSE](LICENSE).
