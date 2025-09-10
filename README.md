@@ -2,7 +2,7 @@
 
 ## Documentation
 
-* [here](content/docs)
+* [here](src/app/page.md)
 * [Prometheus server documentation](https://github.com/prometheus/prometheus/tree/main/docs)
 * [Alertmanager server documentation](https://github.com/prometheus/alertmanager/tree/main/docs)
 
