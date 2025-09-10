@@ -5,86 +5,106 @@ sort_rank: 1
 
 ## What is Prometheus?
 
-[Prometheus](https://github.com/prometheus) is an open-source systems
-monitoring and alerting toolkit originally built at
-[SoundCloud](http://soundcloud.com). Since its inception in 2012, many
-companies and organizations have adopted Prometheus, and the project has a very
-active developer and user [community](/community). It is now a standalone open source project
-and maintained independently of any company. To emphasize this, and to clarify
-the project's governance structure, Prometheus joined the
-[Cloud Native Computing Foundation](https://cncf.io/) in 2016
-as the second hosted project, after [Kubernetes](http://kubernetes.io/).
-
-Prometheus collects and stores its metrics as time series data, i.e. metrics information is stored with the timestamp at which it was recorded, alongside optional key-value pairs called labels.
-
-For more elaborate overviews of Prometheus, see the resources linked from the
-[media](/docs/introduction/media/) section.
+* [here](/prometheus-website/src/components/Hero.md)
+* [external documentation links](media.md)
 
 ### Features
 
-Prometheus's main features are:
-
-* a multi-dimensional [data model](/docs/concepts/data_model/) with time series data identified by metric name and key/value pairs
-* PromQL, a [flexible query language](/docs/prometheus/latest/querying/basics/)
-  to leverage this dimensionality
-* no reliance on distributed storage; single server nodes are autonomous
-* time series collection happens via a pull model over HTTP
-* [pushing time series](/docs/instrumenting/pushing/) is supported via an intermediary gateway
-* targets are discovered via service discovery or static configuration
-* multiple modes of graphing and dashboarding support
+* [here](/prometheus-website/src/components/FeaturesCards.md)
+* time series collection
+  * -- via -- HTTP / pull model 
+* [pushing time series](../instrumenting/pushing.md)
+  * supported -- via an -- intermediary gateway
+* targets are discovered -- via -- service discovery OR static configuration
+* multiple modes of graphing & dashboarding support
 
 ### What are metrics?
 
-Metrics are numerical measurements in layperson terms. The term time series refers to the recording of changes over time. What users want to measure differs from application to application. For a web server, it could be request times; for a database, it could be the number of active connections or active queries, and so on.
+* metrics
+  * == 👀numerical measurements / SIMPLY explained👀
+  * allows
+    * understand your application 
 
-Metrics play an important role in understanding why your application is working in a certain way. Let's assume you are running a web application and discover that it is slow. To learn what is happening with your application, you will need some information. For example, when the number of requests is high, the application may become slow. If you have the request count metric, you can determine the cause and increase the number of servers to handle the load.
+* term time series
+  * == recording of changes | time
+
+* what to measure
+  * depend -- on -- EACH application
+    * _Examples:_ 
+      * _Example1:_ | web server, request count metric
+      * _Example2:_ | database, number of active connections or active queries
 
 ### Components
 
-The Prometheus ecosystem consists of multiple components, many of which are
-optional:
+* characteristics
+  * MOST are OPTIONAL
+  * written | [Go](https://golang.org/)
+    * -> easy to build & deploy -- as -- static binaries
 
-* the main [Prometheus server](https://github.com/prometheus/prometheus) which scrapes and stores time series data
-* [client libraries](/docs/instrumenting/clientlibs/) for instrumenting application code
-* a [push gateway](https://github.com/prometheus/pushgateway) for supporting short-lived jobs
-* special-purpose [exporters](/docs/instrumenting/exporters/) for services like HAProxy, StatsD, Graphite, etc.
-* an [alertmanager](https://github.com/prometheus/alertmanager) to handle alerts
-* various support tools
-
-Most Prometheus components are written in [Go](https://golang.org/), making
-them easy to build and deploy as static binaries.
+* are
+  * [Prometheus server](https://github.com/prometheus/prometheus)
+    * about time series data,
+      * scrapes
+      * stores 
+  * [client libraries](../instrumenting/clientlibs.md)
+    * allows
+      * instrumenting application code
+  * [push gateway](https://github.com/prometheus/pushgateway)
+    * support 
+      * short-lived jobs
+  * [exporters](../instrumenting/exporters.md)
+    * uses
+      * special-purpose
+        * _Examples:_ like HAProxy, StatsD, Graphite, etc.
+  * [alertmanager](https://github.com/prometheus/alertmanager)
+    * allows
+      * handle alerts
+  * OTHERS
 
 ### Architecture
 
-This diagram illustrates the architecture of Prometheus and some of
-its ecosystem components:
+* goal
+  * Prometheus' architecture + its ecosystem components
 
-![Prometheus architecture](/assets/docs/architecture.svg)
+![Prometheus architecture](/prometheus-website/public/assets/docs/architecture.svg)
 
-Prometheus scrapes metrics from instrumented jobs, either directly or via an
-intermediary push gateway for short-lived jobs. It stores all scraped samples
-locally and runs rules over this data to either aggregate and record new time
-series from existing data or generate alerts. [Grafana](https://grafana.com/) or
-other API consumers can be used to visualize the collected data.
+* Prometheus 
+  * scrapes instrumented jobs' metrics -- via --
+    * directly OR
+    * short-lived jobs' intermediary push gateway 
+  * stores locally ALL scraped samples
+  * runs rules -- over -- this data
+    * Reason: 🧠
+      * aggregate & record new time series -- from -- existing data OR
+      * generate alerts🧠
 
-## When does it fit?
+* [Grafana](https://grafana.com/) OR other API consumers
+  * uses
+    * visualize the collected data
 
-Prometheus works well for recording any purely numeric time series. It fits
-both machine-centric monitoring as well as monitoring of highly dynamic
-service-oriented architectures. In a world of microservices, its support for
-multi-dimensional data collection and querying is a particular strength.
+## Use cases
 
-Prometheus is designed for reliability, to be the system you go to
-during an outage to allow you to quickly diagnose problems. Each Prometheus
-server is standalone, not depending on network storage or other remote services.
-You can rely on it when other parts of your infrastructure are broken, and
-you do not need to setup extensive infrastructure to use it.
+* recording any purely numeric time series
+* monitoring
+  * machine-centric or
+  * highly dynamic service-oriented architectures
+* | microservices architecture
+  * Reason: 🧠support multi-dimensional data
+    * collection &
+    * querying🧠
 
-## When does it not fit?
+* reliability
+  * MAIN design's goal
+  * == | outage,
+    * allow you to quickly diagnose problems
+  * Reasons: 🧠
+    * EACH Prometheus server is standalone
+    * ❌NOT depend on network storage OR other remote services❌ 
+    * ❌NOT need to setup extensive infrastructure❌
+    * ALTHOUGH other parts of your infrastructure are broken -> you can rely on it🧠
 
-Prometheus values reliability. You can always view what statistics are
-available about your system, even under failure conditions. If you need 100%
-accuracy, such as for per-request billing, Prometheus is not a good choice as
-the collected data will likely not be detailed and complete enough. In such a
-case you would be best off using some other system to collect and analyze the
-data for billing, and Prometheus for the rest of your monitoring.
+## ❌NOT use cases❌
+
+* need 100% accuracy
+  * _Example:_ for billing
+  * Reason: 🧠the collected data NORMALLY is NOT detailed and complete enough🧠
