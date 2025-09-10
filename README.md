@@ -4,42 +4,79 @@
 
 * [here](content/docs)
 * [Prometheus server documentation](https://github.com/prometheus/prometheus/tree/main/docs)
+* [Alertmanager server documentation](https://github.com/prometheus/alertmanager/tree/main/docs)
 
 ## Prerequisites
 
-* install
-  * Ruby
-  * [bundler](https://bundler.io/)
-* `make bundle`
+* [Node.js](https://nodejs.org/en/download/)
+* [NPM](https://www.npmjs.com/get-npm)
+* environment variables
+  * allows
+    * | download documentation from OTHER repositories,
+      * bypass anonymous user rate limits 
+    * fetching GitHub API, about available downloads  
+  * uses
+    * | pre-build scripts,
+      * [Github access token](https://github.com/settings/tokens/new) / read access
+  * steps
+    * | this path, add
+    
+      ```.env
+      GITHUB_TOKEN=<your_github_token>
+      ```
 
 ## how to build?
 
 * TODO: To generate the static site, run:
 
 ```bash
-make build
+npm install
+npm run build-all
 ```
 
-The resulting static site will be stored in the `output` directory.
+This cleans any previous build artifacts, fetches the latest documentation from the Prometheus and Alertmanager repositories, fetches information about available downloads (for the Download page), builds the website, and then indexes it (for the built-in [Pagefind](https://pagefind.app/)-based search functionality).
 
-Optionally, you can use an API token to avoid rate limits on the API. You can get an API token from https://github.com/settings/tokens/new.
+The final output is a static website in the `out` directory.
+
+You can also run each of these build steps separately:
+
+* `npm run clean` - Cleans any build output and generated files from previous runs.
+* `npm run fetch-repo-docs` - Fetches the latest documentation from the Prometheus and Alertmanager repositories.
+* `npm run fetch-downloads-info` - Fetches information about available downloads (for the Download page).
+* `npm run build` - Builds the website. When using `npm`, this automatically also runs the `postbuild` script, which generates [Pagefind](https://pagefind.app/) search indexes. If you are using `pnpm`, you will either need to run `npm run postbuild` manually, or set the [`enablePrePostScripts` option](https://pnpm.io/cli/run#pnpm-workspaceyaml-settings) in your `pnpm-workspace.yaml` file.
+
+### Serving the static build output
+
+To serve the static build output, run:
+
 ```bash
-export GITHUB_AUTHENTICATION='-u user:token'
+npx serve out
 ```
 
 ## how to deploy locally?
 
-To run a local server that displays the generated site, run:
+### Running the website in development mode
+
+To run the website in development mode, run:
 
 ```bash
-# Rebuild the site whenever relevant files change:
-make guard
-# Start the local development server in a separate shell:
-make serve
+npm run dev
 ```
 
-You should now be able to view the generated site at
-[http://localhost:3000/](http://localhost:3000).
+This will start a web server on port 3000. You can access the website at [http://localhost:3000](http://localhost:3000).
+
+The website will automatically reload when you make changes to the source files.
+
+**NOTE:** Site search is not available in development mode, as it requires building a [Pagefind](https://pagefind.app/) index on the static build output and then loading the generated `/pagefind/pagefind.js` file. This only happens when building the app for production via `npm run build` (part of `npm run build-all`).
+
+## Configuration
+
+You can configure some high-level settings for the documentation website in the [`docs-config.ts`](docs-config.ts) file in the root of the repository. This file configures:
+
+* The base URL of the website.
+* Which repositories to fetch documentation from.
+* Which repositories to fetch download information from.
+* Information about LTS (long-term-support) versions.
 
 ## Automatic Deployment
 
