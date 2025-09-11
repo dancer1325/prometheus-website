@@ -6,7 +6,12 @@ layout: page
 
 # Governance
 
-This document describes the rules and governance of the project. It is meant to be followed by all the developers of the project and the Prometheus community. Common terminology used in this governance document are listed below:
+* goal
+  * Prometheus
+    * monitoring system governance rules &
+    * time series database governance rules
+
+* This document describes the rules and governance of the project. It is meant to be followed by all the developers of the project and the Prometheus community. Common terminology used in this governance document are listed below:
 
 * **Team members**: Any members of the private [prometheus-team][team] Google group.
 

@@ -3,79 +3,68 @@ title: Community
 layout: page
 
 ---
-## Project Governance
 
-The Prometheus project follows the [Prometheus governance](/governance/).
+* goal
+  * Prometheus monitoring system & time series database's community resources
 
 ## Community connections
 
-Prometheus is developed in the open. Here are some of the channels we
-use to communicate and contribute:
-
 ### Slack channel
 
-`#prometheus` on CNCF [Slack](https://slack.cncf.io/).
+* [CNCF Slack](https://slack.cncf.io/)'s `#prometheus` 
 
 ### IRC
 
-`#prometheus` on [irc.libera.chat](https://libera.chat/).
+* [irc.libera.chat](https://libera.chat/)'s `#prometheus` 
 
 ### Matrix
 
-[`#prometheus:matrix.org`](https://app.element.io/#/room/#prometheus:matrix.org).
+* [`#prometheus:matrix.org`](https://app.element.io/#/room/#prometheus:matrix.org)
 
 ### User mailing lists
 
-- [prometheus-announce](https://groups.google.com/forum/#!forum/prometheus-announce) ([mirror](https://www.mail-archive.com/prometheus-announce@googlegroups.com/))
-  - low-traffic list for announcements like new releases.
-- [prometheus-users](https://groups.google.com/forum/#!forum/prometheus-users) ([mirror](https://www.mail-archive.com/prometheus-users@googlegroups.com/))
- - for discussions around Prometheus usage and community support.
-   Announcements are *not* generally mirrored from
-   [prometheus-announce](https://groups.google.com/forum/#!forum/prometheus-announce).
+- [prometheus-announce](https://groups.google.com/forum/#!forum/prometheus-announce)
+  - low-traffic list
+  - uses
+    - NEW releases 
+  - [mirror](https://www.mail-archive.com/prometheus-announce@googlegroups.com/)
+    
+- [prometheus-users](https://groups.google.com/forum/#!forum/prometheus-users)
+  - [mirror](https://www.mail-archive.com/prometheus-users@googlegroups.com/)
+  - uses
+    - discussions around Prometheus usage & community support
 
 ### Discourse forum
 
-Web-based discussion forum at [discuss.prometheus.io](https://discuss.prometheus.io/) hosted by
-[Discourse](https://www.discourse.org/).
+* == Web-based discussion forum
+* | [discuss.prometheus.io](https://discuss.prometheus.io/)
 
 ### Calendar for public events
 
-We have a public calendar for events, which you can use to join us.
+* [public calendar for events](https://calendar.google.com/calendar/u/0/embed?src=prometheus.io_bdf9qgm081nrd0fe32g3olsld0%40group.calendar.google.com)
 
-If you just want to get an overview, simply use our [web view in your browser's time zone](https://calendar.google.com/calendar/u/0/embed?src=prometheus.io_bdf9qgm081nrd0fe32g3olsld0%40group.calendar.google.com).
-
-If you're using Google products, there's an [automagic link to add it your own Google calendar](https://calendar.google.com/calendar/render?cid=prometheus.io_bdf9qgm081nrd0fe32g3olsld0@group.calendar.google.com).
-
-If you're using a different calendar, there's an [.ics to add to non-Google calendars](https://calendar.google.com/calendar/ical/prometheus.io_bdf9qgm081nrd0fe32g3olsld0%40group.calendar.google.com/public/basic.ics).
+* ways to add | your calendar
+  * [| Google products](https://calendar.google.com/calendar/render?cid=prometheus.io_bdf9qgm081nrd0fe32g3olsld0@group.calendar.google.com)
+  * [| non-Google calendars, -- via -- .ics](https://calendar.google.com/calendar/ical/prometheus.io_bdf9qgm081nrd0fe32g3olsld0%40group.calendar.google.com/public/basic.ics)
 
 ### Social
 
-- [@prometheus.io](https://bsky.app/profile/prometheus.io) on [Bluesky](https://bsky.app/).
-- [@Prometheus](https://chaos.social/@Prometheus) on [Mastodon (chaos.social)](https://chaos.social).
+- | 
+  - [Bluesky](https://bsky.app/profile/prometheus.io)
+  - [Mastodon](https://chaos.social/@Prometheus)
 
 ### GitHub
 
-To file bugs and feature requests, use the GitHub issue
-tracker of the relevant [Prometheus repository](http://github.com/prometheus).
-For questions and discussions, many repositories offer GitHub discussions.
-Generally, the other community channels listed here are best suited to get
-support or discuss overarching topics.
+* uses
+  * [file bugs & feature requests](https://github.com/prometheus/prometheus/issues)
+  * [questions & discussions](https://github.com/prometheus/prometheus/discussions)
 
-*Please do not ask individual project members for support. Use the
-channels above instead, where the whole community can help you and
-benefit from the solutions provided. If community support is
-insufficient for your situation, please refer to the [Support &
-Training](/support-training) page.*
+* recommendations
+  * NOT ask individual project
 
 ## Contributing
 
-We welcome community contributions! Please see the `CONTRIBUTING.md`
-file in the respective Prometheus repository for instructions on how to
-submit changes. If you are planning on making more elaborate or
-potentially controversial changes, please discuss them in the developers
-IRC channel or on the mailing list before sending a pull request.
-
-We host public weekly meetings focused on Prometheus development and
+* TODO: We host public weekly meetings focused on Prometheus development and
 contributions. It's meant for developers and maintainers to meet and get
 unblocked, pair review, and discuss development aspects of the
 Prometheus and related official projects (e.g `node_exporter`,

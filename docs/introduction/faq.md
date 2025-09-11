@@ -21,35 +21,44 @@ sort_rank: 5
 
 #### Is this cloud native?
 
-* yes
+* 💡yes💡
+  * Reason: 🧠Prometheus's [service discovery](https://prometheus.io/docs/prometheus/latest/configuration/configuration/) integrates -- with -- MOST tools & clouds🧠
+    * _Example:_ with Kubernetes
 
 * Cloud native
   * == 👀operating model👀 /
     * enable deployments, MORE
       * flexible
       * scalable
-  * != old service boundaries  
-  * how does it got?
-    * Prometheus's 
-      * [service discovery](https://prometheus.io/docs/prometheus/latest/configuration/configuration/) integrates -- with -- MOST tools & clouds
-      * dimensional data model + scale | 10M of active series
-        * allows
-          * monitor large cloud-native deployments
+  * != old service boundaries
+    * _Examples:_ about monitoring
+      * | old service boundaries,
+        * agents installed | EACH server
+      * | cloud native,
+        * Prometheus pull HTTP endpoints' metrics / WITHOUT agents
 
 * Prometheus'
   * design
     * ALWAYS working alerts -> got notifications
-  * trade-offs
-    * NO 100% accurate
-    * COMPLEX functions
-    * native long storage
+    * 's trade-offs
+      * NO 100% accurate
+      * COMPLEX functions
+      * native long storage
+  * allows
+    * monitor large cloud-native deployments
+      * Reason:🧠's dimensional data model can scale TILL 10M of active series🧠
 
-### Can Prometheus be made highly available?
+### Can Prometheus be made HA (highly available)?
 
-Yes, run identical Prometheus servers on two or more separate machines.
-Identical alerts will be deduplicated by the [Alertmanager](https://github.com/prometheus/alertmanager).
-
-Alertmanager supports [high availability](https://github.com/prometheus/alertmanager#high-availability) by interconnecting multiple Alertmanager instances to build an Alertmanager cluster. Instances of a cluster communicate using a gossip protocol managed via [HashiCorp's Memberlist](https://github.com/hashicorp/memberlist) library.
+* yes
+  * run IDENTICAL Prometheus servers | >=2 separate machines /
+    * [Alertmanager](https://github.com/prometheus/alertmanager)
+      * can deduplicate == 👀ONLY 1! alert👀
+      * supports [high availability](https://github.com/prometheus/alertmanager#high-availability) 
+        * Reason: 🧠interconnecting MULTIPLE Alertmanager instances
+          * -- via -- [HashiCorp's Memberlist library](https://github.com/hashicorp/memberlist)
+            * == gossip protocol
+          * | 1 Alertmanager cluster🧠 
 
 ### I was told Prometheus “doesn't scale”.
 
@@ -132,9 +141,10 @@ various components attempt to handle failing changes gracefully.
 
 ### Can I send alerts?
 
-Yes, with the [Alertmanager](https://github.com/prometheus/alertmanager).
-
-We support sending alerts through [email, various native integrations](https://prometheus.io/docs/alerting/latest/configuration/), and a [webhook system anyone can add integrations to](https://prometheus.io/docs/operating/integrations/#alertmanager-webhook-receiver).
+* 👀-- via -- [Alertmanager](https://github.com/prometheus/alertmanager)👀 / 
+  * support
+    * [email + various native integrations](https://prometheus.io/docs/alerting/latest/configuration/)
+    * [webhook system / you can add integrations to](https://prometheus.io/docs/operating/integrations/#alertmanager-webhook-receiver)
 
 ### Can I create dashboards?
 
