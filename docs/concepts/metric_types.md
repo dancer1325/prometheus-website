@@ -22,24 +22,28 @@ sort_rank: 2
 
 ## Counter
 
-* TODO:
-A _counter_ is a cumulative metric that represents a single [monotonically 
-increasing counter](https://en.wikipedia.org/wiki/Monotonic_function) whose
-value can only increase or be reset to zero on restart. For example, you can
-use a counter to represent the number of requests served, tasks completed, or
-errors.
+* == cumulative metric /
+  * == 1! [👀monotonically increasing👀 counter](https://en.wikipedia.org/wiki/Monotonic_function) 
+  * 's value
+    * ONLY increase OR
+    * | restart,
+      * reset to 0
+  * uses
+    * represent the number of 
+      * requests served,
+      * tasks completed
+      * errors
+  * ❌NOT uses❌
+    * expose a value / can decrease
+      * _Example:_ number of CURRENTLY running processes
 
-Do not use a counter to expose a value that can decrease. For example, do not
-use a counter for the number of currently running processes; instead use a gauge.
-
-Client library usage documentation for counters:
-
-   * [Go](http://godoc.org/github.com/prometheus/client_golang/prometheus#Counter)
-   * [Java](https://prometheus.github.io/client_java/getting-started/metric-types/#counter)
-   * [Python](https://prometheus.github.io/client_python/instrumenting/counter/)
-   * [Ruby](https://github.com/prometheus/client_ruby#counter)
-   * [.Net](https://github.com/prometheus-net/prometheus-net#counters)
-   * [Rust](https://docs.rs/prometheus-client/latest/prometheus_client/metrics/counter/index.html)
+* Client library for counters
+  * [Go](http://godoc.org/github.com/prometheus/client_golang/prometheus#Counter)
+  * [Java](https://prometheus.github.io/client_java/getting-started/metric-types/#counter)
+  * [Python](https://prometheus.github.io/client_python/instrumenting/counter/)
+  * [Ruby](https://github.com/prometheus/client_ruby#counter)
+  * [.Net](https://github.com/prometheus-net/prometheus-net#counters)
+  * [Rust](https://docs.rs/prometheus-client/latest/prometheus_client/metrics/counter/index.html)
 
 ## Gauge
 

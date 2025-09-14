@@ -3,12 +3,15 @@ title: Client libraries
 sort_rank: 1
 ---
 
+* Prometheus client libraries
+  * implement the Prometheus [metric types](../concepts/metric_types.md) 
 Before you can monitor your services, you need to add instrumentation to their
-code via one of the Prometheus client libraries. These implement the Prometheus
-[metric types](/docs/concepts/metric_types/).
+code via one of the Prometheus client libraries
+
 
 Choose a Prometheus client library that matches the language in which your
-application is written. This lets you define and expose internal metrics via an
+application is written
+* This lets you define and expose internal metrics via an
 HTTP endpoint on your application’s instance:
 
 * [Go](https://github.com/prometheus/client_golang)
@@ -47,7 +50,8 @@ formats](/docs/instrumenting/exposition_formats/) yourself to expose metrics.
 
 When implementing a new Prometheus client library, please follow the
 [guidelines on writing client libraries](/docs/instrumenting/writing_clientlibs).
-Note that this document is still a work in progress. Please also consider
+Note that this document is still a work in progress
+* Please also consider
 consulting the [development mailing list](https://groups.google.com/forum/#!forum/prometheus-developers).
 We are happy to give advice on how to make your library as useful and
 consistent as possible.
