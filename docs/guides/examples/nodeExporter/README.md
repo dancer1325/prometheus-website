@@ -20,7 +20,7 @@
     tar xvfz node_exporter-*.*-amd64.tar.gz
     ```
   * | [node_exporter-1.9.1.darwin-arm64](node_exporter-1.9.1.darwin-arm64)
-    * `./node_exporter `
+    * `./node_exporter`
       * Problems:
         * Problem1: "Apple could not verify “node_exporter” is free of malware that may harm your Mac or compromise your privacy."
           * Solution: `xattr -d com.apple.quarantine ./node_exporter`
