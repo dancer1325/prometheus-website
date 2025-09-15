@@ -1,0 +1,6 @@
+scrape_configs:
+  # job     -- for the -- Node Exporter
+  - job_name: 'node'
+    file_sd_configs:
+      - files:
+          - 'targets.json'    # retrieve Node Exporter's host & port information
