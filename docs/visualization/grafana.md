@@ -4,31 +4,48 @@ nav_title: Grafana
 sort_rank: 2
 ---
 
-[Grafana](http://grafana.com/) is an open-source analytics and visualization platform used to monitor and analyze metrics from various data
-sources. It allows users to create, explore, and share interactive dashboards, supporting integrations with databases
-like Prometheus, InfluxDB, Elasticsearch, and more. Grafana is widely used for observability, providing alerting, plugin
-extensibility, and a flexible query editor for real-time data visualization.
+* [Grafana](http://grafana.com/)
+  * == analytics & visualization platform
+    * open-source  
+  * allows users,
+    * about dashboards
+      * create,
+      * explore,
+      * share
+  * uses
+    * FROM MULTIPLE data sources,
+      * monitor
+      * analyze metrics 
+  * use cases
+    * observability
+  * support
+    * integrations -- with -- databases (_Examples:_ Prometheus, InfluxDB, Elasticsearch, ...)
+      * _Example:_ Grafana data source -- for -- Prometheus
+        * requirements
+          * Grafana v2.5.0 (2015-10-28)
+  * provide
+    * alerting,
+    * plugin extensibility
+    * query editor -- for -- real-time data visualization /
+      * flexible
 
-Note: The Grafana data source for Prometheus is included since Grafana 2.5.0 (2015-10-28).
+* _Example:_ Grafana dashboard / queries Prometheus -- for -- data
 
-The following shows an example Grafana dashboard which queries Prometheus for data:
-
-[![Grafana screenshot](/assets/docs/grafana_prometheus.png)](/assets/docs/grafana_prometheus.png)
+  [![Grafana screenshot](/prometheus-website/public/assets/docs/grafana_prometheus.png)](/assets/docs/grafana_prometheus.png)
 
 ## Installing
 
-To install Grafana see the [official Grafana
-documentation](https://grafana.com/grafana/download/).
+* follow [official Grafana documentation](https://grafana.com/grafana/download/)
 
 ## Using
 
-By default, Grafana will be listening on
-[http://localhost:3000](http://localhost:3000). The default login is "admin" /
-"admin".
+* | browser,
+  * http://localhost:3000, 
+    * default one
+    * login
+      * "admin" / "admin"
 
-### Creating a Prometheus data source
-
-To create a Prometheus data source in Grafana:
+### Creating a Prometheus data source | Grafana
 
 1. Click on the "cogwheel" in the sidebar to open the Configuration menu.
 2. Click on "Data Sources".

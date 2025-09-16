@@ -8,14 +8,9 @@
 * `make assets`
 
 # uses / metric types can be distinguished
-* | root path
-  * `prometheus --config.file=docs/concepts/examples/metric_types/simple-prometheus.yml --web.listen-address=:9090`
-* `curl http://localhost:9090/metrics`
-  * 's return
-    * wire protocol / 👀expressed | units👀
-* `pip3 install prometheus-client` & `python3 metrics_example.py`
-  * check EACH metric type is distinguished
-    * Reason: 🧠NOT ALLOWED any action🧠
+* `python metrics_example.py`
+  * check log messages
+* http://localhost:8000/metrics
 
 # uses / metric types can NOT be distinguished
 * | root path
