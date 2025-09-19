@@ -11,7 +11,7 @@ sort_rank: 1
     * set of labeled dimensions
   * == data model / 
     * uses
-      * 👀MOST used one by Prometheus -- to store -- ALL data 👀
+      * 👀by Prometheus -- to store -- ALL data 👀
   * temporary derived time series
     * == Prometheus query results
 
