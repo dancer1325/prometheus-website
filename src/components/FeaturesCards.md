@@ -1,13 +1,13 @@
 # Multi-Dimensional data model
 * Prometheus
   * models time series | 👀dimensional data model 👀 
-    * != raw tables
+    * ⚠️!= raw tables⚠️
     * -> 
       * flexible
+        * Reason: 
+          * 🧠you can modify the dimensions🧠
       * powerful
-
-* Time series
-  * == 💡metric name + key-value pairS💡
+        * easier queries
 
 * [MORE](/prometheus-website/docs/concepts/data_model.md)
 
