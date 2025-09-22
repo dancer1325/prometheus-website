@@ -52,13 +52,17 @@
 
 # Metric names and labels
 ## Metric names
-* TODO:
+### if you want to identify UNIQUELY time series -> MANDATORY
+* `{job="prometheus"}`
+  * MULTIPLE time series appear 
 
 ## Metric labels
-* TODO:
-
-# Notation
-* TODO:
+### OPTIONAL
+* `http_requests_total`
+### change -> NEW time series
+* `prometheus_http_requests_total`
+* graph
+  * MULTIPLE time series
 
 # Monitor another service
 
