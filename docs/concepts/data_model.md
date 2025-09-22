@@ -13,7 +13,36 @@ sort_rank: 1
     * uses
       * 👀by Prometheus -- to store -- ALL data 👀
   * temporary derived time series
-    * == Prometheus query results
+    * ⚠️!= exist time series⚠️
+    * == 👀calculated on-fly | Prometheus query results👀
+  * 's notation
+    ```
+    <metric name>{<label name>=<label value>, ...}
+    ```
+    * _Example:_
+      ```
+      api_http_requests_total{method="POST", handler="/messages"}
+      ```
+    * follow [OpenTSDB's notation](http://opentsdb.net/)
+    * if `metric name` use UTF-8 characters / outside the recommended set -> MUST be quoted
+      ```
+      {"<metric name>", <label name>="<label value>", ...}
+      ```
+    * `{__name__="<metric name>", <label name>="<label value>", ...}`
+      * allows
+        * complex querying
+      * == 👀way / Prometheus internally stores 👀
+
+* time series data
+  * == 👀1! point | specific time series👀
+  * == 💡`<metric name>{<label name>=<label value>, …}  value  @Timestamp|wasRegistered`💡
+  * _Example:_
+    ```text
+    http_requests_total{method="GET", status="200"} 1547 @1609459200
+    # 1547                              == number of requests
+    # @1609459200                       == timestamp | it was registered
+    # {method="GET", status="200"}      == labels
+    ```
 
 ## Metric names and labels
 
@@ -67,25 +96,3 @@ sort_rank: 1
   * float64 value
     * | Prometheus v2.40+ / experimental 
       * -- can be replaced by -- full histogram
-
-## Notation 
-
-* Notation of time series
-  ```
-  <metric name>{<label name>=<label value>, ...}
-  ```
-  
-  * _Example:_ 
-    ```
-    api_http_requests_total{method="POST", handler="/messages"}
-    ```
-
-  * == [OpenTSDB's notation](http://opentsdb.net/)
-  * if `metric name` use UTF-8 characters / outside the recommended set -> MUST be quoted
-    ```
-    {"<metric name>", <label name>="<label value>", ...}
-    ```
-  * `metric name` == (internally as) `__name__="<metric name>"` ->
-    ```
-    {__name__="<metric name>", <label name>="<label value>", ...}
-    ```

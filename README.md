@@ -1,12 +1,13 @@
 # Prometheus Documentation
 
-## Documentation
+## Content
 
 * [here](src/app/page.md)
 * [Prometheus server documentation](https://github.com/prometheus/prometheus/tree/main/docs)
 * [Alertmanager server documentation](https://github.com/prometheus/alertmanager/tree/main/docs)
 
-## Prerequisites
+## About this repo itself
+### Prerequisites
 
 * [Node.js](https://nodejs.org/en/download/)
 * [NPM](https://www.npmjs.com/get-npm)
@@ -25,7 +26,7 @@
       GITHUB_TOKEN=<your_github_token>
       ```
 
-## how to build?
+### how to build?
 
 * TODO: To generate the static site, run:
 
@@ -45,7 +46,7 @@ You can also run each of these build steps separately:
 * `npm run fetch-downloads-info` - Fetches information about available downloads (for the Download page).
 * `npm run build` - Builds the website. When using `npm`, this automatically also runs the `postbuild` script, which generates [Pagefind](https://pagefind.app/) search indexes. If you are using `pnpm`, you will either need to run `npm run postbuild` manually, or set the [`enablePrePostScripts` option](https://pnpm.io/cli/run#pnpm-workspaceyaml-settings) in your `pnpm-workspace.yaml` file.
 
-### Serving the static build output
+#### Serving the static build output
 
 To serve the static build output, run:
 
@@ -53,9 +54,9 @@ To serve the static build output, run:
 npx serve out
 ```
 
-## how to deploy locally?
+### how to deploy locally?
 
-### Running the website in development mode
+#### Running the website in development mode
 
 To run the website in development mode, run:
 
@@ -69,7 +70,7 @@ The website will automatically reload when you make changes to the source files.
 
 **NOTE:** Site search is not available in development mode, as it requires building a [Pagefind](https://pagefind.app/) index on the static build output and then loading the generated `/pagefind/pagefind.js` file. This only happens when building the app for production via `npm run build` (part of `npm run build-all`).
 
-## Configuration
+### Configuration
 
 You can configure some high-level settings for the documentation website in the [`docs-config.ts`](docs-config.ts) file in the root of the repository. This file configures:
 
@@ -78,7 +79,7 @@ You can configure some high-level settings for the documentation website in the 
 * Which repositories to fetch download information from.
 * Information about LTS (long-term-support) versions.
 
-## Automatic Deployment
+### Automatic Deployment
 
 This site is automatically deployed using [Netlify](https://www.netlify.com/).
 
