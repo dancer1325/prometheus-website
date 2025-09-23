@@ -166,12 +166,8 @@ for the current state of this effort.
 
 ### Which languages have instrumentation libraries?
 
-There are a number of client libraries for instrumenting your services with
-Prometheus metrics. See the [client libraries](/docs/instrumenting/clientlibs/)
-documentation for details.
-
-If you are interested in contributing a client library for a new language, see
-the [exposition formats](/docs/instrumenting/exposition_formats/).
+* [client libraries](/docs/instrumenting/clientlibs/)
+* [how to create NEW](/docs/instrumenting/exposition_formats/)
 
 ### Can I monitor machines?
 
@@ -196,18 +192,21 @@ the [exposition formats](/docs/instrumenting/exposition_formats/).
 
 * [here](/docs/instrumenting/exporters/)
 
-### Can I monitor JVM applications via JMX?
+### Can I monitor JVM applications -- via -- JMX?
 
-Yes, for applications that you cannot instrument directly with the Java client, you can use the [JMX Exporter](https://github.com/prometheus/jmx_exporter)
-either standalone or as a Java Agent.
+* [JMX](https://github.com/prometheus/jmx_exporter)
+  * use case
+    * applications / you can NOT instrument (== NOT possible to add Java client,)
+  * ways to use
+    * standalone
+    * as Java Agent
 
 ### What is the performance impact of instrumentation?
 
-Performance across client libraries and languages may vary. For Java,
-[benchmarks](https://github.com/prometheus/client_java/blob/main/benchmarks/README.md)
-indicate that incrementing a counter/gauge with the Java client will take
-12-17ns, depending on contention. This is negligible for all but the most
-latency-critical code.
+* Performance impact
+  * -- depend on -- client libraries & languages may vary
+  * [Java benchmarks](https://github.com/prometheus/client_java/blob/main/benchmarks/README.md)
+    * increment a counter/gauge -> 12-17ns
 
 ## Implementation
 
