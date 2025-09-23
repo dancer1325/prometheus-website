@@ -201,7 +201,7 @@ jobs.
 
 ### What applications can Prometheus monitor out of the box?
 
-See [the list of exporters and integrations](/docs/instrumenting/exporters/).
+* [list of exporters & integrations](/docs/instrumenting/exporters/)
 
 ### Can I monitor JVM applications via JMX?
 
