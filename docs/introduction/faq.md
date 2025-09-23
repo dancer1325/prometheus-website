@@ -18,6 +18,14 @@ sort_rank: 5
 
 * main Prometheus server
   * 👀runs standalone -- as a -- 1! monolithic binary / NO external dependencies👀
+    * Proof:🧠
+      * monolithic binary
+        * | MacOs
+          *  `otool -L $GOPATH/bin/prometheus`
+            * ONLY OS' basic dependencies
+      * NO external dependencies
+        * `docker run --name prometheus -d -p 127.0.0.1:9090:9090 prom/prometheus`
+          * it runs ALL perfectly🧠
 
 #### Is this cloud native?
 
