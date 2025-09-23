@@ -4,30 +4,26 @@ nav_title: First steps
 sort_rank: 3
 ---
 
-Welcome to Prometheus! Prometheus is a monitoring platform that collects metrics from monitored targets by scraping metrics HTTP endpoints on these targets. This guide will show you how to install, configure and monitor our first resource with Prometheus. You'll download, install and run Prometheus. You'll also download and install an exporter, tools that expose time series data on hosts and services. Our first exporter will be Prometheus itself, which provides a wide variety of host-level metrics about memory usage, garbage collection, and more.
+* goal
+  * how to,
+    * about FIRST resource | Prometheus, 
+      * install 
+      * configure
+      * monitor
+    * about exporters,
+      * download
+      * install
+
+* exporters
+  * expose time series data | hosts & services
+  * 💡Prometheus itself💡
+    * FIRST exporter
+    * provides
+      * host-level metrics (memory usage, garbage collection, ...)
 
 ## Downloading Prometheus
 
-[Download the latest release](/download) of Prometheus for your platform, then
-extract it:
-
-```language-bash
-tar xvfz prometheus-*.tar.gz
-cd prometheus-*
-```
-
-The Prometheus server is a single binary called `prometheus` (or `prometheus.exe` on Microsoft Windows). We can run the binary and see help on its options by passing the `--help` flag.
-
-```language-bash
-./prometheus --help
-usage: prometheus [<flags>]
-
-The Prometheus monitoring server
-
-. . .
-```
-
-Before starting Prometheus, let's configure it.
+* [here](https://github.com/dancer1325/prometheus/blob/main/README.md#install)
 
 ## Configuring Prometheus
 
