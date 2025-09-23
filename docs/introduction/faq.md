@@ -70,17 +70,19 @@ sort_rank: 5
 
 ### I was told Prometheus “doesn't scale”.
 
-This is often more of a marketing claim than anything else.
+* FALSE 
+* 1! Prometheus server instance
+  * can run x10M active series
 
-A single instance of Prometheus can be more performant than some systems positioning themselves as long term storage solution for Prometheus.
-You can run Prometheus reliably with tens of millions of active series.
-
-If you need more than that, there are several options. [Scaling and Federating Prometheus](https://www.robustperception.io/scaling-and-federating-prometheus/) on the Robust Perception blog is a good starting point, as are the long storage systems listed on our [integrations page](https://prometheus.io/docs/operating/integrations/#remote-endpoints-and-storage).
+* if you need > x10M active series -> ways
+  * [Federating Prometheus](https://www.robustperception.io/scaling-and-federating-prometheus/) 
+  * [remote long storage systems](https://prometheus.io/docs/operating/integrations/#remote-endpoints-and-storage)
 
 ### What language is Prometheus written in?
 
-Most Prometheus components are written in Go. Some are also written in Java,
-Python, and Ruby.
+* Go
+  * MOSTLY
+* Java + Python + Ruby
 
 ### How stable are Prometheus features, storage formats, and APIs?
 
@@ -98,48 +100,39 @@ have formal releases yet.
 
 ### Why do you pull rather than push?
 
-Pulling over HTTP offers a number of advantages:
-
-* You can start extra monitoring instances as needed, e.g. on your laptop when developing changes.
-* You can more easily and reliably tell if a target is down.
-* You can manually go to a target and inspect its health with a web browser.
-
-Overall, we believe that pulling is slightly better than pushing, but it should
-not be considered a major point when considering a monitoring system.
-
-For cases where you must push, we offer the [Pushgateway](/docs/instrumenting/pushing/).
+* Pulling over HTTP
+  * advantages
+    * mirror OTHER Prometheus instances (_Example:_ | prod stages) / monitor PROD services
+    * easily & reliably tell if a target is down
+    * inspect target's health | web browser
 
 ### How to feed logs into Prometheus?
 
-Short answer: Don't! Use something like [Grafana Loki](https://grafana.com/oss/loki/) or [OpenSearch](https://opensearch.org/) instead.
-
-Longer answer: Prometheus is a system to collect and process metrics, not an
-event logging system. The Grafana blog post
-[Logs and Metrics and Graphs, Oh My!](https://grafana.com/blog/2016/01/05/logs-and-metrics-and-graphs-oh-my/)
-provides more details about the differences between logs and metrics.
-
-If you want to extract Prometheus metrics from application logs, Grafana Loki is designed for just that. See Loki's [metric queries](https://grafana.com/docs/loki/latest/logql/metric_queries/) documentation.
+* ❌NOT recommended❌
+  * Solution: use [Grafana Loki](https://grafana.com/oss/loki/) or [OpenSearch](https://opensearch.org/)
+    * Grafana Loki
+      * 's design
+        * [FROM application logs -- extract -- Prometheus metrics](https://grafana.com/docs/loki/latest/logql/metric_queries/) 
+  * Reason:🧠
+    * Prometheus' scope
+      * collect & process metrics != event logging system🧠
+    * [Logs != Metrics](https://grafana.com/blog/2016/01/05/logs-and-metrics-and-graphs-oh-my/)
 
 ### Who wrote Prometheus?
 
-Prometheus was initially started privately by
-[Matt T. Proud](http://www.matttproud.com) and
-[Julius Volz](http://juliusv.com). The majority of its
-initial development was sponsored by [SoundCloud](https://soundcloud.com).
-
-It's now maintained and extended by a wide range of [companies](https://prometheus.devstats.cncf.io/d/5/companies-table?orgId=1) and [individuals](https://prometheus.io/governance).
+* original software engineers
+  * were
+    * [Matt T. Proud](http://www.matttproud.com)
+    * [Julius Volz](http://juliusv.com)
+  * sponsored -- by -- [SoundCloud](https://soundcloud.com)
 
 ### What license is Prometheus released under?
 
-Prometheus is released under the
-[Apache 2.0](https://github.com/prometheus/prometheus/blob/main/LICENSE) license.
+* [Apache 2.0](https://github.com/prometheus/prometheus/blob/main/LICENSE)
 
 ### What is the plural of Prometheus?
 
-After [extensive research](https://youtu.be/B_CDeYrqxjQ), it has been determined
-that the correct plural of 'Prometheus' is 'Prometheis'.
-
-If you can not remember this, "Prometheus instances" is a good workaround.
+* ['Prometheis'](https://youtu.be/B_CDeYrqxjQ)
 
 ### Can I reload Prometheus's configuration?
 
@@ -156,8 +149,8 @@ various components attempt to handle failing changes gracefully.
 
 ### Can I create dashboards?
 
-Yes, we recommend [Grafana](/docs/visualization/grafana/) for production
-usage. There are also [Console templates](/docs/visualization/consoles/).
+* recommendations
+  * [Grafana](/docs/visualization/grafana/)
 
 ### Can I change the timezone? Why is everything in UTC?
 
@@ -182,26 +175,26 @@ the [exposition formats](/docs/instrumenting/exposition_formats/).
 
 ### Can I monitor machines?
 
-Yes, the [Node Exporter](https://github.com/prometheus/node_exporter) exposes
-an extensive set of machine-level metrics on Linux and other Unix systems such
-as CPU usage, memory, disk utilization, filesystem fullness, and network
-bandwidth.
+* -- via -- [Node Exporter](https://github.com/prometheus/node_exporter)
+  * Reason:🧠exposes machine-level metrics | Linux & other Unix systems
+    * _Examples:_ CPU usage, memory, disk utilization, filesystem fullness, and network bandwidth
 
 ### Can I monitor network devices?
 
-Yes, the [SNMP Exporter](https://github.com/prometheus/snmp_exporter) allows
-monitoring of devices that support SNMP.
-For industrial networks, there's also a [Modbus exporter](https://github.com/RichiH/modbus_exporter).
+* -- via -- 
+  * [SNMP Exporter](https://github.com/prometheus/snmp_exporter)
+    * Reason:🧠devices / support SNMP🧠
+  * [Modbus exporter](https://github.com/RichiH/modbus_exporter)
+    * uses
+      * industrial networks 
 
 ### Can I monitor batch jobs?
 
-Yes, using the [Pushgateway](/docs/instrumenting/pushing/). See also the
-[best practices](/docs/practices/instrumentation/#batch-jobs) for monitoring batch
-jobs.
+* -- via -- [Pushgateway](/docs/instrumenting/pushing/)
 
 ### What applications can Prometheus monitor out of the box?
 
-* [list of exporters & integrations](/docs/instrumenting/exporters/)
+* [here](/docs/instrumenting/exporters/)
 
 ### Can I monitor JVM applications via JMX?
 
