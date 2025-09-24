@@ -3,6 +3,19 @@ title: Native Histograms [EXPERIMENTAL]
 sort_rank: 1
 ---
 
+
+* requirements
+  * Prometheus v2.40, -- via -- experimental
+* == 👀1! time series 👀/ includes
+  * dynamic number of buckets
+  * sum of observations
+  * count of observations
+* vs histogram
+  * higher resolution
+    * Reason:🧠buckets are adapted AUTOMATICALLY🧠
+  * cheap
+    * Reason:🧠require LESS space🧠
+
 Native histograms were introduced as an experimental feature in November 2022.
 They are a concept that touches almost every part of the Prometheus stack. The
 first version of the Prometheus server supporting native histograms was

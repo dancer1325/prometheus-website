@@ -1,0 +1,16 @@
+services:
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "127.0.0.1:9090:9090"
+    volumes:
+      # 1. scrape_interval
+      # 1.1 global.scrape_interval
+      #- ./prometheus-scrapeInterval-global.yml:/etc/prometheus/prometheus.yml
+      # 1.2 scrape_configs[*].scrape_interval
+      #- ./prometheus-scrapeInterval-scrapeConfigs.yml:/etc/prometheus/prometheus.yml
+
+      # 2. evaluation_interval
+      - ./prometheus-evaluation_interval.yml:/etc/prometheus/prometheus.yml
+      - ./alert_rules.yml:/etc/prometheus/alert_rules.yml     # it ALSO requires to load the alert rules

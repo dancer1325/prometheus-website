@@ -12,7 +12,7 @@
   * open source
   * use cases
     * alerting
-    * dashboarding
+    * dashboard
   * [active ecosystem](/prometheus-website/src/app/community)
   * history
     * | 2012, built | [SoundCloud](http://soundcloud.com) 
@@ -20,15 +20,5 @@
       * 2@ project / got `graduate` status
         * 1@ was Kubernetes
   * ONLY system / 👀directly supported -- by -- [Kubernetes](https://kubernetes.io/)👀
-
-* time series data
-  * == 💡timestamp (| was recorded) + optional labels (== key-value pairs)💡
-  * _Example:_ 
-    ```text
-    http_requests_total{method="GET", status="200"} 1547 @1609459200
-    # 1547                              == number of requests
-    # @1609459200                       == timestamp | it was registered
-    # {method="GET", status="200"}      == labels
-    ```
 
 * [MORE](/prometheus-website/docs/introduction/overview.md)

@@ -4,18 +4,23 @@ sort_rank: 4
 ---
 
 ## Prometheus vs. Graphite
+* [Graphite](http://graphite.readthedocs.org/en/latest/)
+  * == time series database (TSDB) + query language
 
 ### Scope
 
-[Graphite](http://graphite.readthedocs.org/en/latest/) focuses on being a
-passive time series database with a query language and graphing features. Any
-other concerns are addressed by external components.
+* Graphite's scope
+  * passive time series
+  * graphing features
+  * querying
 
-Prometheus is a full monitoring and trending system that includes built-in and
-active scraping, storing, querying, graphing, and alerting based on time series
-data. It has knowledge about what the world should look like (which endpoints
-should exist, what time series patterns mean trouble, etc.), and actively tries
-to find faults.
+* Prometheus
+  * FULL monitoring system
+    * active scraping,
+    * storing,
+    * querying,
+    * graphing,
+    * alerting -- based on -- time series data
 
 ### Data model
 
@@ -71,31 +76,25 @@ choice.
 
 ## Prometheus vs. InfluxDB
 
-[InfluxDB](https://influxdata.com/) is an open-source time series database,
-with a commercial option for scaling and clustering. The InfluxDB project was
-released almost a year after Prometheus development began, so we were unable to
-consider it as an alternative at the time. Still, there are significant
-differences between Prometheus and InfluxDB, and both systems are geared
-towards slightly different use cases.
-
+* [InfluxDB](https://influxdata.com/)
+  * == time series database (TSDB)
+    * products
+      * open-source
+      * commercial option (scaling & clustering)
+    
 ### Scope
 
-For a fair comparison, we must also consider
-[Kapacitor](https://github.com/influxdata/kapacitor) together with InfluxDB, as
-in combination they address the same problem space as Prometheus and the
-Alertmanager.
-
-The same scope differences as in the case of
-[Graphite](#prometheus-vs-graphite) apply here for InfluxDB itself. In addition
-InfluxDB offers continuous queries, which are equivalent to Prometheus
-recording rules.
-
-Kapacitor’s scope is a combination of Prometheus recording rules, alerting
-rules, and the Alertmanager's notification functionality. Prometheus offers [a
-more powerful query language for graphing and
-alerting](https://www.robustperception.io/translating-between-monitoring-languages/).
-The Prometheus Alertmanager additionally offers grouping, deduplication and
-silencing functionality.
+* InfluxDB + [Kapacitor](https://github.com/influxdata/kapacitor) 
+  * == 👀Prometheus + Alertmanager👀
+    * Alertmanager
+      * ADDITIONALLY provides
+        * grouping,
+        * deduplication silencing 
+  * 's scope
+    * == [Graphite's scope](#scope)
+    * continuous queries
+      * == Prometheus recording rules
+        * [comparation](https://www.robustperception.io/translating-between-monitoring-languages/)
 
 ### Data model / storage
 
@@ -169,13 +168,14 @@ by a number of companies and individuals, some of whom also offer commercial ser
 
 ## Prometheus vs. OpenTSDB
 
-[OpenTSDB](http://opentsdb.net/) is a distributed time series database based on
-[Hadoop](http://hadoop.apache.org/) and [HBase](http://hbase.apache.org/).
+* [OpenTSDB](http://opentsdb.net/)
+  * == time series database (TSDB)
+    * distributed 
+    * -- based on -- [Hadoop](http://hadoop.apache.org/) & [HBase](http://hbase.apache.org/)
 
 ### Scope
 
-The same scope differences as in the case of
-[Graphite](/docs/introduction/comparison/#prometheus-vs-graphite) apply here.
+* [SAME](#scope)
 
 ### Data model
 

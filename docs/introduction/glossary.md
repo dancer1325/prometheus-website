@@ -5,19 +5,27 @@ sort_rank: 9
 
 ### Alert
 
-An alert is the outcome of an alerting rule in Prometheus that is
-actively firing. Alerts are sent from Prometheus to the Alertmanager.
+* alert
+  * == (Prometheus alerting rule / firing)'s outcome 
+  * FROM Prometheus,
+    * are sent -- to the -- Alertmanager
 
 ### Alertmanager
 
-The [Alertmanager](/docs/alerting/latest/overview/) takes in alerts, aggregates them into
-groups, de-duplicates, applies silences, throttles, and then sends out
-notifications to email, Pagerduty, Slack etc.
+* [Alertmanager's workflow](/docs/alerting/latest/overview/)
+  * takes alerts,
+  * aggregates them | groups,
+  * de-duplicates,
+  * applies silences,
+  * throttles,
+  * sends out notifications -- to -- email, Pagerduty, Slack etc
 
 ### Bridge
 
-A bridge is a component that takes samples from a client library and
-exposes them to a non-Prometheus monitoring system. For example, the Python, Go, and Java clients can export metrics to Graphite.
+* bridge
+  * == component /
+    * client library's samples are exposed -- to a -- NON-Prometheus monitoring system
+  * _Example:_ Python, Go, and Java clients can export metrics -- to -- Graphite
 
 ### Client library
 
@@ -27,21 +35,45 @@ pull metrics from other systems and expose the metrics to Prometheus.
 
 ### Collector
 
-A collector is a part of an exporter that represents a set of metrics. It may be
-a single metric if it is part of direct instrumentation, or many metrics if it is pulling metrics from another system.
+* collector
+  * == exporter's part / 
+    * == set of metrics
+      * if it's 
+        * | [direct instrumentation](#direct-instrumentation) -> 1! metric
+        * pulling metrics from ANOTHER system -> MANY metrics 
+
+![](static/exporter.png)
 
 ### Direct instrumentation
 
-Direct instrumentation is instrumentation added inline as part of the source code of a program, using a [client library](#client-library).
+* Direct instrumentation
+  * == instrumentation added inline | your source code
+    * -- via -- [client library](#client-library)
+
+    ![](static/directInstrumentation.png)
+
+  * vs External System
+  
+    ![](static/directInstrumentationVsExternalSystem.png)
+
 
 ### Endpoint
 
-A source of metrics that can be scraped, usually corresponding to a single process.
+* source of metrics / can be scraped
+  * -- correspond to a -- 1! process
+    * _Example:_ if a web application runs | http://localhost:8080 
+      * -> metrics exposed | http://localhost:8080/metrics
 
 ### Exporter
 
-An exporter is a binary running alongside the application you
-want to obtain metrics from. The exporter exposes Prometheus metrics, commonly by converting metrics that are exposed in a non-Prometheus format into a format that Prometheus supports.
+* exporter
+  * == binary running ALONGSIDE application / you want to obtain metrics from
+  * ALONGSIDE application == ways
+    * | SAME server
+    * as library
+  * exposes Prometheus metrics
+    * -- by COMMONLY --
+      * metrics / exposed | NON-Prometheus format, are converted -- into a -- format / Prometheus supports
 
 ### Instance
 
@@ -53,7 +85,10 @@ A collection of targets with the same purpose, for example monitoring a group of
 
 ### Notification
 
-A notification represents a group of one or more alerts, and is sent by the Alertmanager to email, Pagerduty, Slack etc.
+* == group of >=1 alerts /
+  * sent
+    * -- by -- Alertmanager
+    * -- to -- email, Pagerduty, Slack etc.
 
 ### Promdash
 
@@ -61,13 +96,16 @@ Promdash was a native dashboard builder for Prometheus. It has been deprecated a
 
 ### Prometheus
 
-Prometheus usually refers to the core binary of the Prometheus system. It may
-also refer to the Prometheus monitoring system as a whole.
+* refers to 
+  * Prometheus 
+    * system's core binary
+    * monitoring system
 
 ### PromQL
 
-[PromQL](/docs/prometheus/latest/querying/basics/) is the Prometheus Query Language. It allows for
-a wide range of operations including aggregation, slicing and dicing, prediction and joins.
+* [PromQL](/docs/prometheus/latest/querying/basics/)
+  * == Prometheus Query Language
+  * enable operations (aggregation, slicing and dicing, prediction and joins)
 
 ### Pushgateway
 
@@ -111,14 +149,16 @@ A remote write endpoint is what Prometheus talks to when doing a remote write.
 
 ### Sample
 
-A sample is a single value at a point in time in a time series.
-
-In Prometheus, each sample consists of a float64 value and a millisecond-precision timestamp.
+* sample
+  * == 1! time series value | 1! time
+    * == | Prometheus,
+      * float64 value + millisecond-precision timestamp
+      * see [data model](../concepts/data_model.md)
 
 ### Silence
 
-A silence in the Alertmanager prevents alerts, with labels matching the silence, from
-being included in notifications.
+* silence | Alertmanager
+  * avoid alerts are -- , via labels, -- included | notifications
 
 ### Target
 

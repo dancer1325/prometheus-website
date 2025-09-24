@@ -106,5 +106,9 @@ sort_rank: 1
 ## ❌NOT use cases❌
 
 * need 100% accuracy
-  * _Example:_ for billing
-  * Reason: 🧠the collected data NORMALLY is NOT detailed and complete enough🧠
+  * _Example:_ for billing, finance auditing
+  * Reason: 🧠
+    * collected data NORMALLY is NOT detailed -- due to --
+      * scrape / intervals
+        * != life data
+      * network failure 🧠

@@ -3,29 +3,21 @@ title: Exporters and integrations
 sort_rank: 4
 ---
 
-There are a number of libraries and servers which help in exporting existing
-metrics from third-party systems as Prometheus metrics. This is useful for
-cases where it is not feasible to instrument a given system with Prometheus
-metrics directly (for example, HAProxy or Linux system stats).
+* goal
+  * libraries & servers / help exporting existing metrics
+    * -- from -- third-party systems
+    * -- as -- Prometheus metrics
+    * use cases
+      * NOT POSSIBLE to instrument a system / send Prometheus metrics directly
+        * _Example:_ HAProxy, Linux system stats, databases
 
 ## Third-party exporters
 
-Some of these exporters are maintained as part of the official [Prometheus GitHub organization](https://github.com/prometheus),
-those are marked as *official*, others are externally contributed and maintained.
+* official
+  * hosted | [Prometheus GitHub organization](https://github.com/prometheus),
 
-We encourage the creation of more exporters but cannot vet all of them for
-[best practices](/docs/instrumenting/writing_exporters/).
-Commonly, those exporters are hosted outside of the Prometheus GitHub
-organization.
-
-The [exporter default
-port](https://github.com/prometheus/prometheus/wiki/Default-port-allocations)
-wiki page has become another catalog of exporters, and may include exporters
-not listed here due to overlapping functionality or still being in development.
-
-The [JMX exporter](https://github.com/prometheus/jmx_exporter) can export from a
-wide variety of JVM-based applications, for example [Kafka](http://kafka.apache.org/) and
-[Cassandra](http://cassandra.apache.org/).
+* [exporter default port](https://github.com/prometheus/prometheus/wiki/Default-port-allocations)
+  * catalog of exporters
 
 ### Databases
 
@@ -186,6 +178,7 @@ wide variety of JVM-based applications, for example [Kafka](http://kafka.apache.
    * [Java GC exporter](https://github.com/loyispa/jgc_exporter)
    * [JavaMelody exporter](https://github.com/fschlag/javamelody-prometheus-exporter)
    * [JMX exporter](https://github.com/prometheus/jmx_exporter) (**official**)
+     * enable export -- from a -- wide variety of JVM-based applications ([Kafka](http://kafka.apache.org/), Weblogic, Tomcat, [Cassandra](http://cassandra.apache.org/), ...)
    * [Munin exporter](https://github.com/pvdh/munin_exporter)
    * [Nagios / Naemon exporter](https://github.com/Griesbacher/Iapetos)
    * [Neptune Apex exporter](https://github.com/dl-romero/neptune_exporter)
@@ -275,14 +268,14 @@ wide variety of JVM-based applications, for example [Kafka](http://kafka.apache.
 When implementing a new Prometheus exporter, please follow the
 [guidelines on writing exporters](/docs/instrumenting/writing_exporters)
 Please also consider consulting the [development mailing
-list](https://groups.google.com/forum/#!forum/prometheus-developers).  We are
+list](https://groups.google.com/forum/#!forum/prometheus-developers)
+*  We are
 happy to give advice on how to make your exporter as useful and consistent as
 possible.
 
-## Software exposing Prometheus metrics
+## Software / expose Prometheus metrics
 
-Some third-party software exposes metrics in the Prometheus format, so no
-separate exporters are needed:
+* ❌== NO require exporters❌
 
    * [Ansible Automation Platform Automation Controller (AWX)](https://docs.ansible.com/automation-controller/latest/html/administration/metrics.html)
    * [App Connect Enterprise](https://github.com/ot4i/ace-docker)
@@ -331,24 +324,20 @@ separate exporters are needed:
    * [Flux](https://github.com/fluxcd/flux2)
    * [Xandikos](https://www.xandikos.org/) (**direct**)
    * [Zipkin](https://github.com/openzipkin/zipkin/tree/master/zipkin-server#metrics)
-
-The software marked *direct* is also directly instrumented with a Prometheus client library.
+   * [Spring Boot](https://docs.spring.io/spring-boot/reference/actuator/metrics.html#actuator.metrics.export.prometheus)
 
 ## Other third-party utilities
 
-This section lists libraries and other utilities that help you instrument code
-in a certain language. They are not Prometheus client libraries themselves but
-make use of one of the normal Prometheus client libraries under the hood. As
-for all independently maintained software, we cannot vet all of them for best
-practices.
+* libraries & utilities / help you instrument code
+  * != Prometheus client libraries
 
-   * Clojure: [iapetos](https://github.com/clj-commons/iapetos)
-   * Go: [go-metrics instrumentation library](https://github.com/armon/go-metrics)
-   * Go: [gokit](https://github.com/peterbourgon/gokit)
-   * Go: [prombolt](https://github.com/mdlayher/prombolt)
-   * Java/JVM: [EclipseLink metrics collector](https://github.com/VitaNuova/eclipselinkexporter)
-   * Java/JVM: [Hystrix metrics publisher](https://github.com/ahus1/prometheus-hystrix)
-   * Java/JVM: [Jersey metrics collector](https://github.com/VitaNuova/jerseyexporter)
-   * Java/JVM: [Micrometer Prometheus Registry](https://micrometer.io/docs/registry/prometheus)
-   * Python-Django: [django-prometheus](https://github.com/korfuri/django-prometheus)
-   * Node.js: [swagger-stats](https://github.com/slanatech/swagger-stats)
+* Clojure: [iapetos](https://github.com/clj-commons/iapetos)
+* Go: [go-metrics instrumentation library](https://github.com/armon/go-metrics)
+* Go: [gokit](https://github.com/peterbourgon/gokit)
+* Go: [prombolt](https://github.com/mdlayher/prombolt)
+* Java/JVM: [EclipseLink metrics collector](https://github.com/VitaNuova/eclipselinkexporter)
+* Java/JVM: [Hystrix metrics publisher](https://github.com/ahus1/prometheus-hystrix)
+* Java/JVM: [Jersey metrics collector](https://github.com/VitaNuova/jerseyexporter)
+* Java/JVM: [Micrometer Prometheus Registry](https://micrometer.io/docs/registry/prometheus)
+* Python-Django: [django-prometheus](https://github.com/korfuri/django-prometheus)
+* Node.js: [swagger-stats](https://github.com/slanatech/swagger-stats)

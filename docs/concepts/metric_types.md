@@ -18,26 +18,33 @@ sort_rank: 2
       * wire protocol 
     * can NOT distinguish them
       * Prometheus server
-        * ALL data -- is flatten into -- untyped time series
+        * Reason:🧠ALL data -- is flatten into -- untyped time series🧠
 
 ## Counter
 
 * == cumulative metric /
   * == 1! [👀monotonically increasing👀 counter](https://en.wikipedia.org/wiki/Monotonic_function) 
-  * 's value
-    * ONLY increase OR
-    * | restart,
-      * reset to 0
+    * `<basename>`
+    * 's value
+      * ONLY increase OR
+      * | restart,
+        * reset to 0
   * uses
-    * represent the number of 
+    * number of 
       * requests served,
       * tasks completed
       * errors
   * ❌NOT uses❌
     * expose a value / can decrease
       * _Example:_ number of CURRENTLY running processes
+  * 👀recommendations👀
+    * | query,
+      * use
+        * `rate()`
+        * `increase()`
+      * Reason:🧠OTHERWISE, it's a cumulative value / NO valuable information🧠
 
-* Client library for counters
+* Client library / support counters
   * [Go](http://godoc.org/github.com/prometheus/client_golang/prometheus#Counter)
   * [Java](https://prometheus.github.io/client_java/getting-started/metric-types/#counter)
   * [Python](https://prometheus.github.io/client_python/instrumenting/counter/)
@@ -65,72 +72,63 @@ Client library usage documentation for gauges:
 
 ## Histogram
 
-A _histogram_ samples observations (usually things like request durations or
-response sizes) and counts them in configurable buckets. It also provides a sum
-of all observed values.
+* _histogram_
+  * == 👀1! metric / expose MULTIPLE time series👀
+    * `<basename>_bucket{le="<upper inclusive bound>"}`
+      * == cumulative counters -- for the -- observation buckets
+      * | Prometheus v3.0+,
+        * `le` label's values
+          * | ingestion,
+            * are normalized -- to follow -- [OpenMetrics Canonical Numbers](https://github.com/prometheus/OpenMetrics/blob/main/specification/OpenMetrics.md#considerations-canonical-numbers)
+    * `<basename>_sum`
+      * **total sum** of ALL observed values
+    * `<basename>_count`
+      * == `<basename>_bucket{le="+Inf"}`
+      * == **count** of events / have been observed 
+  * how does it work?
+    * take sample observations (_Example:_ `prometheus_http_request_duration_seconds`)
+    * count the observations | configurable buckets
+  * [`histogram_quantile()` function](/prometheus/docs/querying/functions.md#histogram_quantile)
+    * uses
+      * calculate an [Apdex score](http://en.wikipedia.org/wiki/Apdex)
+  * [MORE](../practices/histograms)
 
-A histogram with a base metric name of `<basename>` exposes multiple time series
-during a scrape:
+* [native histograms](../specs/native_histograms.md)
 
-  * cumulative counters for the observation buckets, exposed as `<basename>_bucket{le="<upper inclusive bound>"}`
-  * the **total sum** of all observed values, exposed as `<basename>_sum`
-  * the **count** of events that have been observed, exposed as `<basename>_count` (identical to `<basename>_bucket{le="+Inf"}` above)
-
-Use the
-[`histogram_quantile()` function](/docs/prometheus/latest/querying/functions/#histogram_quantile)
-to calculate quantiles from histograms or even aggregations of histograms. A
-histogram is also suitable to calculate an
-[Apdex score](http://en.wikipedia.org/wiki/Apdex). When operating on buckets,
-remember that the histogram is
-[cumulative](https://en.wikipedia.org/wiki/Histogram#Cumulative_histogram). See
-[histograms and summaries](/docs/practices/histograms) for details of histogram
-usage and differences to [summaries](#summary).
-
-NOTE: Beginning with Prometheus v2.40, there is experimental support for native
-histograms. A native histogram requires only one time series, which includes a
-dynamic number of buckets in addition to the sum and count of
-observations. Native histograms allow much higher resolution at a fraction of
-the cost. Detailed documentation will follow once native histograms are closer
-to becoming a stable feature.
-
-NOTE: Beginning with Prometheus v3.0, the values of the `le` label of classic
-histograms are normalized during ingestion to follow the format of
-[OpenMetrics Canonical Numbers](https://github.com/prometheus/OpenMetrics/blob/main/specification/OpenMetrics.md#considerations-canonical-numbers).
-
-Client library usage documentation for histograms:
-
-   * [Go](http://godoc.org/github.com/prometheus/client_golang/prometheus#Histogram)
-   * [Java](https://prometheus.github.io/client_java/getting-started/metric-types/#histogram)
-   * [Python](https://prometheus.github.io/client_python/instrumenting/histogram/)
-   * [Ruby](https://github.com/prometheus/client_ruby#histogram)
-   * [.Net](https://github.com/prometheus-net/prometheus-net#histogram)
-   * [Rust](https://docs.rs/prometheus-client/latest/prometheus_client/metrics/histogram/index.html)
+* Client libraries / support histograms
+  * [Go](http://godoc.org/github.com/prometheus/client_golang/prometheus#Histogram)
+  * [Java](https://prometheus.github.io/client_java/getting-started/metric-types/#histogram)
+  * [Python](https://prometheus.github.io/client_python/instrumenting/histogram/)
+  * [Ruby](https://github.com/prometheus/client_ruby#histogram)
+  * [.Net](https://github.com/prometheus-net/prometheus-net#histogram)
+  * [Rust](https://docs.rs/prometheus-client/latest/prometheus_client/metrics/histogram/index.html)
 
 ## Summary
 
-Similar to a _histogram_, a _summary_ samples observations (usually things like
-request durations and response sizes). While it also provides a total count of
-observations and a sum of all observed values, it calculates configurable
-quantiles over a sliding time window.
+* _summary_
+  * == 👀1! metric / expose MULTIPLE time series👀
+    * `<basename>{quantile="<φ>"}`
+      * streaming **φ-quantiles** (0 ≤ φ ≤ 1) of observed events
+        * streaming
+          * == calculated | real time
+        * φ-quantile == percentile
+          * _Examples:_
+            * φ = 0.5 → percentile 50 (mediana)
+            * φ = 0.95 → percentile 95
+            * φ = 0.99 → percentile 99
+        * `<φ>`
+          * | Prometheus v3.0,
+            * | ingestion,
+              * are normalized -- to follow -- [OpenMetrics Canonical Numbers](https://github.com/prometheus/OpenMetrics/blob/main/specification/OpenMetrics.md#considerations-canonical-numbers)
+    * `<basename>_sum`
+      * **total sum** of ALL observed values
+    * `<basename>_count`
+      * == **count** of events / have been observed
+  * [MORE](../practices/histograms)
 
-A summary with a base metric name of `<basename>` exposes multiple time series
-during a scrape:
-
-  * streaming **φ-quantiles** (0 ≤ φ ≤ 1) of observed events, exposed as `<basename>{quantile="<φ>"}`
-  * the **total sum** of all observed values, exposed as `<basename>_sum`
-  * the **count** of events that have been observed, exposed as `<basename>_count`
-
-See [histograms and summaries](/docs/practices/histograms) for
-detailed explanations of φ-quantiles, summary usage, and differences
-to [histograms](#histogram).
-
-NOTE: Beginning with Prometheus v3.0, the values of the `quantile` label are normalized during
-ingestion to follow the format of [OpenMetrics Canonical Numbers](https://github.com/prometheus/OpenMetrics/blob/main/specification/OpenMetrics.md#considerations-canonical-numbers).
-
-Client library usage documentation for summaries:
-
-   * [Go](http://godoc.org/github.com/prometheus/client_golang/prometheus#Summary)
-   * [Java](https://prometheus.github.io/client_java/getting-started/metric-types/#summary)
-   * [Python](https://prometheus.github.io/client_python/instrumenting/summary/)
-   * [Ruby](https://github.com/prometheus/client_ruby#summary)
-   * [.Net](https://github.com/prometheus-net/prometheus-net#summary)
+* Client libraries / support summaries
+  * [Go](http://godoc.org/github.com/prometheus/client_golang/prometheus#Summary)
+  * [Java](https://prometheus.github.io/client_java/getting-started/metric-types/#summary)
+  * [Python](https://prometheus.github.io/client_python/instrumenting/summary/)
+  * [Ruby](https://github.com/prometheus/client_ruby#summary)
+  * [.Net](https://github.com/prometheus-net/prometheus-net#summary)
