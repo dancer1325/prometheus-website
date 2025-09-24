@@ -89,6 +89,8 @@ sort_rank: 2
     * `<basename>_count`
       * == `<basename>_bucket{le="+Inf"}`
       * == **count** of events / have been observed 
+      * 's behavior == [counter's behavior](#counter)
+        * == ALWAYS 1! 👀monotonically increasing👀
   * how does it work?
     * take sample observations (_Example:_ `prometheus_http_request_duration_seconds`)
     * count the observations | configurable buckets
@@ -128,6 +130,8 @@ sort_rank: 2
       * **total sum** of ALL observed values
     * `<basename>_count`
       * == **count** of events / have been observed
+      * 's behavior == [counter's behavior](#counter)
+        * == ALWAYS 1! 👀monotonically increasing👀
   * [MORE](../practices/histograms)
 
 * Client libraries / support summaries

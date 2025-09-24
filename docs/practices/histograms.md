@@ -3,52 +3,24 @@ title: Histograms and summaries
 sort_rank: 4
 ---
 
-NOTE: This document predates native histograms (added as an experimental
-feature in Prometheus v2.40). Once native histograms are closer to becoming a
-stable feature, this document will be thoroughly updated.
+* validity
+  * TILL, native histograms are YET EXPERIMENTAL
 
-Histograms and summaries are more complex metric types. Not only does
-a single histogram or summary create a multitude of time series, it is
-also more difficult to use these metric types correctly. This section
-helps you to pick and configure the appropriate metric type for your
-use case.
+* goal
+  * histograms & summaries
+    * use properly
 
-## Library support
+## `_count` & `_sum`
 
-First of all, check the library support for
-[histograms](/docs/concepts/metric_types/#histogram) and
-[summaries](/docs/concepts/metric_types/#summary).
-
-Some libraries support only one of the two types, or they support summaries
-only in a limited fashion (lacking [quantile calculation](#quantiles)).
-
-## Count and sum of observations
-
-Histograms and summaries both sample observations, typically request
-durations or response sizes. They track the number of observations
-*and* the sum of the observed values, allowing you to calculate the
-*average* of the observed values. Note that the number of observations
-(showing up in Prometheus as a time series with a `_count` suffix) is
-inherently a counter (as described above, it only goes up). The sum of
-observations (showing up as a time series with a `_sum` suffix)
-behaves like a counter, too, as long as there are no negative
-observations. Obviously, request durations or response sizes are
-never negative. In principle, however, you can use summaries and
-histograms to observe negative values (e.g. temperatures in
-centigrade). In that case, the sum of observations can go down, so you
-cannot apply `rate()` to it anymore. In those rare cases where you need to
-apply `rate()` and cannot avoid negative observations, you can use two
-separate summaries, one for positive and one for negative observations
-(the latter with inverted sign), and combine the results later with suitable
-PromQL expressions.
-
-To calculate the average request duration during the last 5 minutes
-from a histogram or summary called `http_request_duration_seconds`,
-use the following expression:
-
-      rate(http_request_duration_seconds_sum[5m])
-    /
-      rate(http_request_duration_seconds_count[5m])
+* Histograms & summaries
+  * uses
+    * metrics / happen repetitively 
+      * _Examples:_ latencies, response sizes
+  * 's time series / "_sum" & "_count"
+    * 's behavior == counter's behavior
+      * ⚠️ALTHOUGH it can have negative values⚠️
+        * -> ❌`rate()` NOT valid❌
+          * Solution: `rate(metricName_sum[5m]) / rate(metricName_count[5m])`
 
 ## Apdex score
 
@@ -56,12 +28,16 @@ A straight-forward use of histograms (but not summaries) is to count
 observations falling into particular buckets of observation
 values.
 
-You might have an SLO to serve 95% of requests within 300ms. In that
+You might have an SLO to serve 95% of requests within 300ms
+* In that
 case, configure a histogram to have a bucket with an upper limit of
-0.3 seconds. You can then directly express the relative amount of
+0.3 seconds
+* You can then directly express the relative amount of
 requests served within 300ms and easily alert if the value drops below
-0.95. The following expression calculates it by job for the requests
-served in the last 5 minutes. The request durations were collected with
+0.95
+* The following expression calculates it by job for the requests
+served in the last 5 minutes
+* The request durations were collected with
 a histogram called `http_request_duration_seconds`.
 
       sum(rate(http_request_duration_seconds_bucket{le="0.3"}[5m])) by (job)
