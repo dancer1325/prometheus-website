@@ -5,7 +5,7 @@ title: Monitoring Linux host metrics with the Node Exporter
 * Prometheus [**Node Exporter**](https://github.com/prometheus/node_exporter)
   * == 1! static binary
   * valid |
-    * *nix systems
+    * Unix systems
       * ⚠️| Windows, use [Windows exporter](https://github.com/prometheus-community/windows_exporter)⚠️
   * exposes 
     * hardware metrics
