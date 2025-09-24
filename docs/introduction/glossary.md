@@ -149,9 +149,11 @@ A remote write endpoint is what Prometheus talks to when doing a remote write.
 
 ### Sample
 
-A sample is a single value at a point in time in a time series.
-
-In Prometheus, each sample consists of a float64 value and a millisecond-precision timestamp.
+* sample
+  * == 1! time series value | 1! time
+    * == | Prometheus,
+      * float64 value + millisecond-precision timestamp
+      * see [data model](../concepts/data_model.md)
 
 ### Silence
 
