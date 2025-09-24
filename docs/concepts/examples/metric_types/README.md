@@ -4,7 +4,6 @@
 # requirements
 
 * install [Prometheus & Promtool](/prometheus/README.md#install)
-* `make assets`
 
 # uses / metric types can be distinguished
 * `python metrics_example.py`
@@ -42,7 +41,11 @@
 * `increase(prometheus_http_requests_total[5m])`
 
 # Gauge
-
+* steps
+  * `docker run --name prometheus -d -p 127.0.0.1:9090:9090 prom/prometheus`
+## 1! numerical value / up & down
+* http://localhost:9090/query
+  * `promhttp_metric_handler_requests_in_flight`, graph
 
 # Histogram
 * steps

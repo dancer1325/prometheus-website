@@ -54,21 +54,25 @@ sort_rank: 2
 
 ## Gauge
 
-A _gauge_ is a metric that represents a single numerical value that can
-arbitrarily go up and down.
+* _gauge_
+  * == 1! metric /
+    * == 1! numerical value /
+      * can arbitrarily
+        * go up
+        * go down
+  * uses
+    * measure values
+      * _Example:_ temperatures or current memory usage
+    * "counts" / can go up and down
+      * _Example:_ number of concurrent requests
 
-Gauges are typically used for measured values like temperatures or current
-memory usage, but also "counts" that can go up and down, like the number of
-concurrent requests.
-
-Client library usage documentation for gauges:
-
-   * [Go](http://godoc.org/github.com/prometheus/client_golang/prometheus#Gauge)
-   * [Java](https://prometheus.github.io/client_java/getting-started/metric-types/#gauge)
-   * [Python](https://prometheus.github.io/client_python/instrumenting/gauge/)
-   * [Ruby](https://github.com/prometheus/client_ruby#gauge)
-   * [.Net](https://github.com/prometheus-net/prometheus-net#gauges)
-   * [Rust](https://docs.rs/prometheus-client/latest/prometheus_client/metrics/gauge/index.html)
+* Client library / support gauges
+  * [Go](http://godoc.org/github.com/prometheus/client_golang/prometheus#Gauge)
+  * [Java](https://prometheus.github.io/client_java/getting-started/metric-types/#gauge)
+  * [Python](https://prometheus.github.io/client_python/instrumenting/gauge/)
+  * [Ruby](https://github.com/prometheus/client_ruby#gauge)
+  * [.Net](https://github.com/prometheus-net/prometheus-net#gauges)
+  * [Rust](https://docs.rs/prometheus-client/latest/prometheus_client/metrics/gauge/index.html)
 
 ## Histogram
 
