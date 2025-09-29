@@ -3,17 +3,10 @@ title: Integrations
 sort_rank: 5
 ---
 
-In addition to [client libraries](/docs/instrumenting/clientlibs/) and
-[exporters and related libraries](/docs/instrumenting/exporters/), there are
-numerous other generic integration points in Prometheus. This page lists some
-of the integrations with these.
-
-
-Not all integrations are listed here, due to overlapping functionality or still
-being in development. The [exporter default
-port](https://github.com/prometheus/prometheus/wiki/Default-port-allocations)
-wiki page also happens to include a few non-exporter integrations that fit in
-these categories.
+* goal
+  * OTHER generic integration | Prometheus
+    * != [client libraries](/docs/instrumenting/clientlibs/) & [exporters and related libraries](/docs/instrumenting/exporters/)
+    * ALSO see [exporter default port](https://github.com/prometheus/prometheus/wiki/Default-port-allocations)
 
 ## File Service Discovery
 
@@ -28,44 +21,47 @@ For service discovery mechanisms not natively supported by Prometheus,
 
 ## Remote Endpoints and Storage
 
-The [remote write](/docs/operating/configuration/#remote_write) and [remote read](/docs/operating/configuration/#remote_read)
-features of Prometheus allow transparently sending and receiving samples. This
-is primarily intended for long term storage. It is recommended that you perform
-careful evaluation of any solution in this space to confirm it can handle your
-data volumes.
+* [remote write](/docs/operating/configuration/#remote_write) & [remote read](/docs/operating/configuration/#remote_read)
+  * uses
+    * long term storage
+  * recommendations
+    * choose -- based on your -- data volumes
 
-  * [AppOptics](https://github.com/solarwinds/prometheus2appoptics): write
-  * [AWS Timestream](https://github.com/dpattmann/prometheus-timestream-adapter): read and write
-  * [Azure Data Explorer](https://github.com/cosh/PrometheusToAdx): read and write
-  * [Azure Event Hubs](https://github.com/bryanklewis/prometheus-eventhubs-adapter): write
-  * [Chronix](https://github.com/ChronixDB/chronix.ingester): write
-  * [Cortex](https://github.com/cortexproject/cortex): read and write
-  * [CrateDB](https://github.com/crate/crate_adapter): read and write
-  * [Elasticsearch](https://www.elastic.co/guide/en/beats/metricbeat/master/metricbeat-metricset-prometheus-remote_write.html): write
-  * [Gnocchi](https://gnocchi.osci.io/prometheus.html): write
-  * [Google BigQuery](https://github.com/KohlsTechnology/prometheus_bigquery_remote_storage_adapter): read and write
-  * [Google Cloud Spanner](https://github.com/google/truestreet): read and write
-  * [Grafana Mimir](https://github.com/grafana/mimir): read and write
-  * [Graphite](https://github.com/prometheus/prometheus/tree/main/documentation/examples/remote_storage/remote_storage_adapter): write
-  * [GreptimeDB](https://github.com/GreptimeTeam/greptimedb): read and write
-  * [InfluxDB](https://docs.influxdata.com/influxdb/v1.8/supported_protocols/prometheus): read and write
-  * [Instana](https://www.instana.com/docs/ecosystem/prometheus/#remote-write): write
-  * [IRONdb](https://github.com/circonus-labs/irondb-prometheus-adapter): read and write
-  * [Kafka](https://github.com/Telefonica/prometheus-kafka-adapter): write
-  * [M3DB](https://m3db.io/docs/integrations/prometheus/): read and write
-  * [Mezmo](https://docs.mezmo.com/telemetry-pipelines/prometheus-remote-write-pipeline-source): write
-  * [New Relic](https://docs.newrelic.com/docs/set-or-remove-your-prometheus-remote-write-integration): write
-  * [OpenTSDB](https://github.com/prometheus/prometheus/tree/main/documentation/examples/remote_storage/remote_storage_adapter): write
-  * [QuasarDB](https://doc.quasardb.net/master/user-guide/integration/prometheus.html): read and write
-  * [SignalFx](https://github.com/signalfx/metricproxy#prometheus): write
-  * [Splunk](https://github.com/kebe7jun/ropee): read and write
-  * [Sysdig Monitor](https://docs.sysdig.com/en/docs/installation/prometheus-remote-write/): write
-  * [TiKV](https://github.com/bragfoo/TiPrometheus): read and write
-  * [Thanos](https://github.com/thanos-io/thanos): read and write
-  * [VictoriaMetrics](https://github.com/VictoriaMetrics/VictoriaMetrics): write
-  * [Wavefront](https://github.com/wavefrontHQ/prometheus-storage-adapter): write
+* [AppOptics](https://github.com/solarwinds/prometheus2appoptics): write
+* [AWS Timestream](https://github.com/dpattmann/prometheus-timestream-adapter): read and write
+* [Azure Data Explorer](https://github.com/cosh/PrometheusToAdx): read and write
+* [Azure Event Hubs](https://github.com/bryanklewis/prometheus-eventhubs-adapter): write
+* [Chronix](https://github.com/ChronixDB/chronix.ingester): write
+* [Cortex](https://github.com/cortexproject/cortex): read and write
+* [CrateDB](https://github.com/crate/crate_adapter): read and write
+* [Elasticsearch](https://www.elastic.co/guide/en/beats/metricbeat/master/metricbeat-metricset-prometheus-remote_write.html): write
+* [Gnocchi](https://gnocchi.osci.io/prometheus.html): write
+* [Google BigQuery](https://github.com/KohlsTechnology/prometheus_bigquery_remote_storage_adapter): read and write
+* [Google Cloud Spanner](https://github.com/google/truestreet): read and write
+* [Grafana Mimir](https://github.com/grafana/mimir): read and write
+* [Graphite](https://github.com/prometheus/prometheus/tree/main/documentation/examples/remote_storage/remote_storage_adapter): write
+* [GreptimeDB](https://github.com/GreptimeTeam/greptimedb): read and write
+* [InfluxDB](https://docs.influxdata.com/influxdb/v1.8/supported_protocols/prometheus): read and write
+* [Instana](https://www.instana.com/docs/ecosystem/prometheus/#remote-write): write
+* [IRONdb](https://github.com/circonus-labs/irondb-prometheus-adapter): read and write
+* [Kafka](https://github.com/Telefonica/prometheus-kafka-adapter): write
+* [M3DB](https://m3db.io/docs/integrations/prometheus/): read and write
+* [Mezmo](https://docs.mezmo.com/telemetry-pipelines/prometheus-remote-write-pipeline-source): write
+* [New Relic](https://docs.newrelic.com/docs/set-or-remove-your-prometheus-remote-write-integration): write
+* [OpenTSDB](https://github.com/prometheus/prometheus/tree/main/documentation/examples/remote_storage/remote_storage_adapter): write
+* [QuasarDB](https://doc.quasardb.net/master/user-guide/integration/prometheus.html): read and write
+* [SignalFx](https://github.com/signalfx/metricproxy#prometheus): write
+* [Splunk](https://github.com/kebe7jun/ropee): read and write
+* [Sysdig Monitor](https://docs.sysdig.com/en/docs/installation/prometheus-remote-write/): write
+* [TiKV](https://github.com/bragfoo/TiPrometheus): read and write
+* [Thanos](https://github.com/thanos-io/thanos): read and write
+* [VictoriaMetrics](https://github.com/VictoriaMetrics/VictoriaMetrics): write
+* [Wavefront](https://github.com/wavefrontHQ/prometheus-storage-adapter): write
 
-[Prom-migrator](https://github.com/timescale/promscale/tree/master/migration-tool/cmd/prom-migrator) is a tool for migrating data between remote storage systems.
+* [Prom-migrator](https://github.com/timescale/promscale/tree/master/migration-tool/cmd/prom-migrator)
+  * == tool /
+    * allows
+      * migrating data BETWEEN remote storage systems
 
 ## Alertmanager Webhook Receiver
 

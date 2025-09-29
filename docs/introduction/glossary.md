@@ -120,32 +120,47 @@ and save their results as a new set of time series.
 
 ### Remote Read
 
-Remote read is a Prometheus feature that allows transparent reading of time series from
-other systems (such as long term storage) as part of queries.
+* Remote read
+  * == Prometheus feature / allows transparent reading other systems' time series
+    * _Example:_ long term storage
 
 ### Remote Read Adapter
 
-Not all systems directly support remote read. A remote read adapter sits between
-Prometheus and another system, converting time series requests and responses between them.
+* remote read adapter
+  * == software BETWEEN Prometheus -- & -- ANOTHER system
+    * == convert time series requests & responses BETWEEN them
+  * use cases
+    * ⚠️systems / NOT support remote read⚠️
 
 ### Remote Read Endpoint
 
-A remote read endpoint is what Prometheus talks to when doing a remote read.
+* remote read endpoint
+  * uses
+    * | remote read,
+      * Prometheus talks -- to -- it 
 
 ### Remote Write
 
-Remote write is a Prometheus feature that allows sending ingested samples on the
-fly to other systems, such as long term storage.
+* Remote write
+  * == Prometheus feature / allows sending ingested samples 
+    * on the fly
+    * -- to -- OTHER systems
+      * _Example:_ long term storage
 
 ### Remote Write Adapter
 
-Not all systems directly support remote write. A remote write adapter sits
-between Prometheus and another system, converting the samples in the remote
-write into a format the other system can understand.
+* remote write adapter
+  * == software BETWEEN Prometheus -- & -- ANOTHER system
+    * == convert the samples -- into a -- format / other system can understand
+  * use cases
+    * ⚠️systems / NOT support remote write⚠️
 
 ### Remote Write Endpoint
 
-A remote write endpoint is what Prometheus talks to when doing a remote write.
+* remote write endpoint
+  * uses
+    * | remote write,
+      * Prometheus talks -- to -- it
 
 ### Sample
 

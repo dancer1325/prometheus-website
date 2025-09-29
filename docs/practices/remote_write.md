@@ -3,36 +3,49 @@ title: Remote write tuning
 sort_rank: 8
 ---
 
-Prometheus implements sane defaults for remote write, but many users have
-different requirements and would like to optimize their remote settings.
-
-This page describes the tuning parameters available via the [remote write
-configuration.](/docs/prometheus/latest/configuration/configuration/#remote_write)
+* Prometheus' remote write
+  * built-in default configurations
+  * ['s configuration](/docs/prometheus/latest/configuration/configuration/#remote_write)
 
 ## Remote write characteristics
 
-Each remote write destination starts a queue which reads from the write-ahead
-log (WAL), writes the samples into an in memory queue owned by a shard, which
-then sends a request to the configured endpoint. The flow of data looks like:
+* WAL (Write-Ahead Log)
+  * == long storage -- for -- ALL samples
+  * uses
+    * remote write's 1! data
+  * durability
+    * == NO lose data
 
-```
-      |-->  queue (shard_1)   --> remote endpoint
-WAL --|-->  queue (shard_...) --> remote endpoint
-      |-->  queue (shard_n)   --> remote endpoint
-```
+* Shards
+  * == units of parallelism /
+    * EACH shard
+      * process INDEPENDENTLY
+      * has it's OWN queue (== temporal buffer)
+    * dynamic scale
+      * == up or down AUTOMATICALLY
 
-When one shard backs up and fills its queue, Prometheus will block reading from
-the WAL into any shards. Failures will be retried without loss of data unless
-the remote endpoint remains down for more than 2 hours. After 2 hours, the WAL
-will be compacted and data that has not been sent will be lost.
+* Prometheus
+  * manage remote writes -- via --
+    * samples come to WAL
+    * samples are distributed to shards
+    * EACH shard stores samples | it's OWN queue
+    * send samples to remote endpoint
 
-During operation, Prometheus will continuously calculate the optimal number of
-shards to use based on the incoming sample rate, number of outstanding samples
-not sent, and time taken to send each sample.
+    ```
+          |-->  queue (shard_1)   --> remote endpoint
+    WAL --|-->  queue (shard_...) --> remote endpoint
+          |-->  queue (shard_n)   --> remote endpoint
+    ```
+  * if 1 shard backs up & fills its queue -> Prometheus will stop reading the WAL | any shards
+    * Reason:🧠
+      * preserve sample order
+      * prevent data loss
+        * failures are retried DURING 2 hours
+          * AFTER 2 hours -> WAL is compacted / data / NOT sent is lost🧠
 
 ### Resource usage
 
-Using remote write increases the memory footprint of Prometheus. Most users
+* TODO: Using remote write increases the memory footprint of Prometheus. Most users
 report ~25% increased memory usage, but that number is dependent on the shape
 of the data. For each series in the WAL, the remote write code caches a mapping
 of series ID to label values, causing large amounts of series churn to
