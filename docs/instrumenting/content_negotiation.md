@@ -6,32 +6,44 @@ sort_rank: 8
 
 ## Abstract
 
-This document specifies the protocol negotiation mechanism used by Prometheus
-when scraping metrics from targets. It defines the Accept header format,
-supported Content Types, and the negotiation process for determining the best
-available format for metric exposition.
+* goal
+  * protocol negotiation mechanism / Prometheus used | scrap targets' metrics
+    * ==
+      * `- H Accept`
+      * supported Content Types
+        * chosen -- based on -- `- H Accept` 
+      * negotiation process
 
 ## Introduction
 
-Prometheus supports multiple formats for scraping metrics, including both
-text-based and binary protobuf formats. Based on the value of the Accept header,
-the target will pick the best available Content Type for its reply.
+* Prometheus supported formats | scrape metrics
+  * text-based
+  * binary protobuf
 
 ## Protocol Types
 
-### Supported Protocols
+### Prometheus supported Protocols
 
-The following protocols are be supported by Prometheus:
-
-1. `PrometheusProto` - Binary protobuf format
-2. `PrometheusText0.0.4` - Prometheus text format version 0.0.4
-3. `PrometheusText1.0.0` - Prometheus text format version 1.0.0
-4. `OpenMetricsText0.0.1` - OpenMetrics text format version 0.0.1
-5. `OpenMetricsText1.0.0` - OpenMetrics text format version 1.0.0
+1. `PrometheusProto`
+   * Binary protobuf format
+   * use cases
+     * HIGH volume
+     * low network
+2. `PrometheusText0.0.4`
+   * Prometheus text format version 0.0.4
+   * use cases
+     * legacy services
+3. `PrometheusText1.0.0`
+   * Prometheus text format version 1.0.0
+4. `OpenMetricsText0.0.1`
+   * OpenMetrics text format version 0.0.1
+5. `OpenMetricsText1.0.0`
+   * OpenMetrics text format version 1.0.0
+   * use cases
+     * modern services
+     * recommended standard
 
 ### Protocol Headers
-
-Each protocol MUST be associated with a specific MIME type and version:
 
 | Protocol             | MIME Type                       | Parameters                                                 |
 | -------------------- | ------------------------------- | ---------------------------------------------------------- |
@@ -43,79 +55,82 @@ Each protocol MUST be associated with a specific MIME type and version:
 
 ## Accept Header Construction
 
-The Accept header is constructed by Prometheus to indicate what formats
-it supports.
+* Accept header
+  * constructed -- by -- Prometheus
+  * == formats / it supports
 
 ### Basic Format
 
-The Accept header MUST be constructed as follows:
-
-1. For each protocol supported by the target:
-   - The protocol's MIME type and parameters MUST be specified.
-   - For protobuf protocols, an encoding of "delimited" MUST be specified.
-   - For PrometheusText1.0.0 and OpenMetricsText1.0.0, the escaping scheme
-     parameter SHOULD be appended.
-   - A quality value (q) parameter SHOULD be appended.
-2. A catch-all `*/*` with the lowest quality value SHOULD be appended.
+1. / EACH protocol / supported -- by the -- target
+   - protocol's MIME type & parameters
+     - MUST be specified
+   - | protobuf protocols,
+     - encoding of "delimited" MUST be specified
+   - | PrometheusText1.0.0 & OpenMetricsText1.0.0,
+     - escaping scheme parameter SHOULD be appended
+   - quality value (q) parameter
+     - SHOULD be appended
+2. catch-all `*/*` / the lowest quality value
+   - SHOULD be appended
 
 ### Quality Values
 
-Quality values SHOULD be assigned in descending order based on the protocol's
-position in the Accept header:
-
-- First protocol: q=0.{n+1}
-- Second protocol: q=0.{n}
-- And so on, where n is the number of supported protocols
+* Quality values
+  * SHOULD be assigned | descending order
+    * -- based on the -- protocol's position | Accept header
+      - First protocol
+        - q=0.{n+1} 
+          - n == NUMBER of supported protocols
+      - Second protocol
+        - q=0.{n}
+          - n == NUMBER of supported protocols
+      - ... 
 
 ### Escaping Scheme
 
-For PrometheusText1.0.0 and OpenMetricsText1.0.0 protocols, the Accept header
-SHOULD include an escaping scheme parameter: `escaping=<scheme>`
-
-Where `<scheme>` MUST be one of:
-
-- `allow-utf8`
-- `underscores`
-- `dots`
-- `values`
-
-See [Escaping Schemes](escaping_schemes.md) spec for details on how the escaping
-schemes function.
+* `-H Accept` / has `escaping=<scheme>`
+  * ⚠️required |⚠️
+    * PrometheusText1.0.0 protocol
+    * OpenMetricsText1.0.0 protocol
+  * ALLOWED `<scheme>` values
+    - `allow-utf8`
+    - `underscores`
+    - `dots`
+    - `values`
+  * see [Escaping Schemes](escaping_schemes.md)
 
 ### Compression
 
-The Accept-Encoding header SHOULD be set to:
-
-- `gzip` if compression is enabled
-- `identity` if compression is disabled
+* `-H Accept-Encoding`
+  * SHOULD be
+    - if compression is 
+      - enabled -> `gzip` 
+      - disabled -> `identity` 
 
 ## Selection of Format
 
-The scrape target SHOULD use the following process to select an appropriate
-Content-Type based on the list of protocols in the Accept header generated by
-Prometheus:
-
-1. It MUST use the protocol in the Accept header with the highest weighting that
-   is supported by Prometheus.
-2. If no protocols are supported, the target MAY use a user-configured fallback
-   scrape protocol.
-3. If no fallback is specified, the target MUST use PrometheusText0.0.4 as a
-   last resort.
+* selection process of an appropriate Content-Type / follows the scrape target
+  1. use the protocol | `-H Accept` / highest weighting / supported by Prometheus
+  2. if NO protocols are supported -> the target MAY use a user-configured fallback
+     scrape protocol
+  3. if NO fallback is specified -> the target MUST use PrometheusText0.0.4 -- as a -- last resort
 
 ## Content-Type Response
 
-Targets SHOULD respond with a Content-Type header that matches one of the
-accepted formats. The Content-Type header MUST include:
-
-1. The appropriate MIME type.
-2. The version parameter.
-3. For text formats version 1.0.0 and above, the escaping scheme parameter.
+* Targets SHOULD respond with `-H Content-Type` / MUST include
+  1. appropriate MIME type
+  2. version parameter
+  3. | text formats version 1.0.0+,
+     * the escaping scheme parameter
 
 ## Security Considerations
 
-1. Targets MUST validate the Accept header to prevent potential injection attacks
-2. The escaping scheme parameter MUST be validated to prevent protocol confusion
-3. Content-Type headers MUST be properly sanitized to prevent MIME type confusion
+1. Targets MUST validate the Accept header
+   * Reason:🧠prevent potential injection attacks🧠
+2. escaping scheme parameter MUST be validated
+   * Reason:🧠prevent protocol confusion🧠
+3. Content-Type headers MUST be properly sanitized
+   * Reason:🧠prevent MIME type confusion🧠
 
 ## Examples
 

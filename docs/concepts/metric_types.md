@@ -62,9 +62,9 @@ sort_rank: 2
         * go down
   * uses
     * measure values
-      * _Example:_ temperatures or current memory usage
+      * _Example:_ temperatures or current memory usage, events | queue
     * "counts" / can go up and down
-      * _Example:_ number of concurrent requests
+      * _Example:_ number of concurrent requests, number of cluster's pods
 
 * Client library / support gauges
   * [Go](http://godoc.org/github.com/prometheus/client_golang/prometheus#Gauge)
@@ -80,6 +80,8 @@ sort_rank: 2
   * == 👀1! metric / expose MULTIPLE time series👀
     * `<basename>_bucket{le="<upper inclusive bound>"}`
       * == cumulative counters -- for the -- observation buckets
+      * `<upper inclusive bound>`
+        * configured -- by -- you
       * | Prometheus v3.0+,
         * `le` label's values
           * | ingestion,
@@ -93,7 +95,10 @@ sort_rank: 2
         * == ALWAYS 1! 👀monotonically increasing👀
   * how does it work?
     * take sample observations (_Example:_ `prometheus_http_request_duration_seconds`)
-    * count the observations | configurable buckets
+    * count the observations | 👀configurable buckets👀
+  * uses
+    * calculated value / counted -- based on -- bucket values
+      * _Example:_ latency to reply a request
   * [`histogram_quantile()` function](/prometheus/docs/querying/functions.md#histogram_quantile)
     * uses
       * calculate an [Apdex score](http://en.wikipedia.org/wiki/Apdex)
@@ -132,6 +137,14 @@ sort_rank: 2
       * == **count** of events / have been observed
       * 's behavior == [counter's behavior](#counter)
         * == ALWAYS 1! 👀monotonically increasing👀
+  * uses
+    * measure events
+    * ALTERNATIVE to histograms
+      * recommendation
+        * ⚠️if it's possible -> use histograms⚠️
+  * vs histograms
+    * cheaper
+    * lose MORE data
   * [MORE](../practices/histograms)
 
 * Client libraries / support summaries
