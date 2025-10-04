@@ -3,7 +3,6 @@ title: Native Histograms [EXPERIMENTAL]
 sort_rank: 1
 ---
 
-
 * requirements
   * Prometheus v2.40, -- via -- experimental
 * == 👀1! time series 👀/ includes
