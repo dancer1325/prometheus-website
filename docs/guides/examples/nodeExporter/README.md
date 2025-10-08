@@ -6,7 +6,8 @@
 * install [Prometheus & Promtool](/prometheus/README.md#install)
 
 # Installing and running the Node Exporter
-## download + extract + run
+## ways
+### download + extract + run
 * steps
   * [download](https://github.com/prometheus/node_exporter/releases) + extract | [here](node_exporter-1.9.1.darwin-arm64)
     ```bash
@@ -25,9 +26,9 @@
         * check "node_"
     * http://localhost:9090/metrics
         * NOT find "node_"
-## ansible
+### ansible
 * TODO:
-## docker
+### docker
 * `docker compose up -d`
 * | browser,
   * http://localhost:9100/metrics
@@ -48,3 +49,14 @@
   * | browser,
     * http://localhost:9090/query
       * type "node_"
+
+# check 
+## it's working
+* http://localhost:9090/targets
+  * node exporter is scrapped
+* http://localhost:9090/query
+  * `node_cpu_seconds_total`
+    * return value
+## monitor host system
+* http://localhost:9100/metrics
+  * `node_filesystem_size_bytes` contains host paths

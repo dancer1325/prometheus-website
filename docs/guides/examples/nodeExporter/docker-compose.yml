@@ -23,6 +23,7 @@ services:
       - /:/rootfs:ro
     command:
       - '--path.procfs=/host/proc'
+      # allows monitoring host system, NOT container
       - '--path.rootfs=/rootfs'
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
