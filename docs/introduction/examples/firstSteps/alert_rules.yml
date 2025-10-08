@@ -1,0 +1,12 @@
+groups:
+  - name: prometheus_scraping_alerts
+    rules:
+      # 1. if target is down
+      - alert: TargetDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Target {{ $labels.instance }} is down"
+          description: "{{ $labels.job }} target {{ $labels.instance }} has been down for more than 1 minute"
