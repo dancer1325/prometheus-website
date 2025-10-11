@@ -7,17 +7,17 @@
 
 # `_count` & `_sum`
 * steps
-  * `python3 exporterWithNegativeValues.py` 
-    * http://localhost:8000/metrics
-      * metrics exposed
+  * `python3 exporterWithNegativeValues.py`
+    * print negative values
   * `docker compose up -d`
-## `rate()` NOT valid
+## it can have negative values
+* http://localhost:8000/metrics
+  * check negative values 
+## `rate(_sum)` mathematically NO sense
 * http://localhost:9090/query
-  * `temperature_celsius_sum / temperature_celsius_count`
-    * Problems:
-      * Problem1: it cna return negative values
-        * Solution: TODO:
-  * `account_balance_sum / account_balance_count`
-    * Problems:
-      * Problem1: it cna return negative values
-        * Solution: TODO:
+  * `rate(temperature_celsius_sum[2m])`
+    * rate change of sum of Celsius / s
+  * `rate(temperature_celsius_sum[2m]) / rate(temperature_celsius_count[2m])`
+    * rate change of sum of Celsius / count
+
+# TODO:

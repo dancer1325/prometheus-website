@@ -19,11 +19,15 @@ sort_rank: 4
   * 's time series / "_sum" & "_count"
     * 's behavior == counter's behavior
       * ⚠️ALTHOUGH it can have negative values⚠️
-        * -> ❌`rate()` NOT valid❌
-          * Solution: `rate(metricName_sum[5m]) / rate(metricName_count[5m])`
+        * -> ❌`rate(_sum[timeDuration])` mathematically NO sense❌
+          * Solution: `rate(metricName_sum[timeDuration]) / rate(metricName_count[timeDuration])`
+          * Reason:🧠
+            * `rate(_sum[timeDuration])`'s units == objectUnits / s 
+            * `rate(metricName_sum[timeDuration]) / rate(metricName_count[timeDuration])`'s units == objectUnits / interval🧠
 
 ## Apdex score
 
+* TODO:
 A straight-forward use of histograms (but not summaries) is to count
 observations falling into particular buckets of observation
 values.
