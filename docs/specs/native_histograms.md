@@ -3,134 +3,84 @@ title: Native Histograms [EXPERIMENTAL]
 sort_rank: 1
 ---
 
+* goal
+  * ALL about native histogram
+
 * requirements
   * Prometheus v2.40, -- via -- experimental
-* == 👀1! time series 👀/ includes
-  * dynamic number of buckets
-  * sum of observations
-  * count of observations
+    * `--enable-feature=native-histograms`
+
+* == 👀1! time series 👀/ 
+  * includes
+    * dynamic number of buckets (`_bucket{}`)
+    * sum of observations (`_sum`)
+    * count of observations (`_count`)
+  * ⚠️converted | ingest⚠️
+  * | /metrics
+    * == 👀exposition format == classic histogram👀
 * vs histogram
   * higher resolution
     * Reason:🧠buckets are adapted AUTOMATICALLY🧠
   * cheap
-    * Reason:🧠require LESS space🧠
+    * Reason:🧠NO store empty time series -> require LESS space🧠
+* ⚠️HIGHLY impact Prometheus stack⚠️
 
-Native histograms were introduced as an experimental feature in November 2022.
-They are a concept that touches almost every part of the Prometheus stack. The
-first version of the Prometheus server supporting native histograms was
-v2.40.0. The support had to be enabled via a feature flag
-`--enable-feature=native-histograms`. (TODO: This is still the case with the
-current release v2.55 and v3.00. Update this section with the stable release,
-once it has happened.)
+* [Developer’s Guide to Prometheus Native
+Histograms](https://docs.google.com/document/d/1VhtB_cGnuO2q_zqEMgtoaLDvJ_kFSXRXoE0Wo74JlSY/edit)
 
-Due to the pervasive nature of the changes related to native histograms, the
-documentation of those changes and explanation of the underlying concepts are
-widely distributed over various channels (like the documentation of affected
-Prometheus components, doc comments in source code, sometimes the source code
-itself, design docs, conference talks, …). This document intends to gather all
-these pieces of information and present them concisely in a unified context.
-This document prefers to link existing detailed documentation rather than
-restating it, but it contains enough information to be comprehensible without
-referring to other sources. With all that said, it should be noted that this
-document is neither suitable as an introduction for beginners nor does it focus
-on the needs of developers. For the former, the plan is to provide an updated
-version of the [Best Practices article on histograms and
-summaries](../practices/histograms.md). (TODO: And a blog post or maybe even a
-series of them.) For the latter, there is Carrie
-Edward's [Developer’s Guide to Prometheus Native
-Histograms](https://docs.google.com/document/d/1VhtB_cGnuO2q_zqEMgtoaLDvJ_kFSXRXoE0Wo74JlSY/edit).
-
-While formal specifications are supposed to happen in their respective context
-(e.g. OpenMetrics changes will be specified in the general OpenMetrics
-specification), some parts of this document take the shape of a specification.
-In those parts, the key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL
-NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” are used as
-described in [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119).
-
-This document still contains a lot of TODOs. In most cases, they are not just
-referring to incompleteness of this doc but more importantly to incomplete
-implementation or open questions. For now, this is essentially a living
-document that will receive updates as implementations and specifications catch
-up.
+* key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL
+NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” follow [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119)
 
 ## Introduction
 
-The core idea of native histograms is to treat histograms as first class
-citizens in the Prometheus data model. Elevating histograms to a “native”
-sample type is the fundamental prerequisite for the key properties listed
-below, which explains the choice of the name _native histograms_.
+* native histograms
+  * goal
+    * 💡treat histograms -- as -- Prometheus data model's FIRST class citizens💡
+      * -> 👀1! serie👀
+  * 's properties
+    1. ONLY store buckets / have data
+       1. -> NO empty buckets
+    2. accept FULL float64 range of values
+       1. != `(le)` & `(quantile)` / accept NO ALL range of values
+    3. NO require bucket boundaries configuration
+       1. Reason:🧠there is 1! metric🧠
+    4. Dynamic resolution -- based on -- FEW configuration parameters
+    5. Sophisticated exponential bucketing schemas / allows merging ALL histograms
+       * [schema](#schema)
+       * -> HIGHER bucket resolution
+    6. data representation / optimize exposition & storage
+  
+* Prometheus sample values
+  * == 👀64-bit floating point values (==  _float64_)👀
+    * -> can DIRECTLY represent _gauges_ OR _counters_
 
-Prior to the introduction of native histograms, all Prometheus sample values
-have been 64-bit floating point values (short _float64_ or just _float_). These
-floats can directly represent _gauges_ or _counters_. The Prometheus metric
-types _summary_ and (the classic version of) _histogram_, as they exist in
-exposition formats, are broken down into float components upon ingestion: A
-_sum_ and a _count_ component for both types, a number of _quantile_ samples
-for a summary and a number of _bucket_ samples for a (classic) histogram.
-
-With native histograms, a new structured sample type is introduced. A single
-sample represents the previously known _sum_ and _count_ plus a dynamic set of
-buckets. This is not limited to ingestion, but PromQL expressions may also
-return the new sample type where previously it was only possible to return
-float samples.
-
-Native histograms have the following key properties:
-
-1. A sparse bucket representation, allowing (near) zero cost for empty buckets.
-2. Coverage of the full float64 range of values.
-3. No configuration of bucket boundaries during instrumentation.
-4. Dynamic resolution picked according to simple configuration parameters.
-5. Sophisticated exponential bucketing schemas, ensuring mergeability between
-   all histograms using those schemas.
-6. An efficient data representation for both exposition and storage.
-
-These key properties are fully realized with standard bucketing schemas. There
-are other schemas with different trade-offs that might only feature a subset of
-these properties. See the [Schema section](#schema) below for details
-
-Compared to the previously existing “classic” histograms, native histograms
-(with standard bucketing schemas) allow a higher bucket resolution across
-arbitrary ranges of observed values at a lower storage and query cost with very
-little to no configuration required. Even partitioning histograms by labels is
-now much more affordable.
-
-Because the sparse representation (property 1 in the list above) is so crucial
-for many of the other benefits of native histograms, _sparse histograms_ was
-a common name for _native histograms_ early during the design process. However,
-other key properties like the exponential bucketing schema or the dynamic
-nature of the buckets are also very important, but not caught at all in the
-term _sparse histograms_.
+* Prometheus metric types _summary_ & (classic) _histogram_
+  * | ingest | TSDB
+    * break down into float components
+      * _summary_
+        * 1 / `_sum`
+        * 1 / _`count`
+        * 1 / EACH quantile 
+      * _histogram_
+        * 1 / `_sum`
+        * 1 / _`count`
+        * 1 / EACH `_bucket`
 
 ### Design docs
 
-These are the design docs that guided the development of native histograms.
-Some details are obsolete now, but they describe rather well the underlying
-concepts and how they evolved.
-
 - [Sparse high-resolution histograms for
-  Prometheus](https://docs.google.com/document/d/1cLNv3aufPZb3fNfaJgdaRBZsInZKKIHo9E6HinJVbpM/edit),
-  the original design doc.
+  Prometheus](https://docs.google.com/document/d/1cLNv3aufPZb3fNfaJgdaRBZsInZKKIHo9E6HinJVbpM/edit)
+  - original design doc
 - [Prometheus Sparse Histograms and
-  PromQL](https://docs.google.com/document/d/1ch6ru8GKg03N02jRjYriurt-CZqUVY09evPg6yKTA1s/edit),
-  more an exploratory document than a proper design doc about the handling of
-  native histograms in PromQL.
+  PromQL](https://docs.google.com/document/d/1ch6ru8GKg03N02jRjYriurt-CZqUVY09evPg6yKTA1s/edit)
 
 ### Conference talks
 
-A more approachable way of learning about native histograms is to watch
-conference talks, of which a selection is presented below. As an introduction,
-it might make sense to watch these talks and then return to this document to
-learn about all the details and technicalities.
-
-- [Secret History of Prometheus
-  Histograms](https://fosdem.org/2020/schedule/event/histograms/) about the
-  classic histograms and why Prometheus kept them for so long.
+- [Secret History of Prometheus Histograms](https://fosdem.org/2020/schedule/event/histograms/)
 - [Prometheus Histograms – Past, Present, and
   Future](https://promcon.io/2019-munich/talks/prometheus-histograms-past-present-and-future/)
-  is the inaugural talk about the new approach that led to native histograms.
 - [Better Histograms for
-  Prometheus](https://www.youtube.com/watch?v=HG7uzON-IDM) explains why the
-  concepts work out in practice.
+  Prometheus](https://www.youtube.com/watch?v=HG7uzON-IDM)
 - [Native Histograms in
   Prometheus](https://promcon.io/2022-munich/talks/native-histograms-in-prometheus/)
   presents and explains native histograms after the actual implementation.
@@ -146,40 +96,40 @@ learn about all the details and technicalities.
 
 ## Glossary
 
-- A __native histogram__ is an instance of the new complex sample type
-  representing a full histogram that this document is about. Where the context
-  is sufficiently clear, it is often just called a _histogram_ below.
-- A __classic histogram__ is an instance of the older sample type representing
-  a histogram with fixed buckets, formerly just called a _histogram_. It exists
-  as such in the exposition formats, but is broken into a number of float
-  samples upon ingestion into Prometheus.
-- __Sparse histogram__ is an older, now deprecated name for _native
-  histogram_. This name might still be found occasionally in older
-  documentation. __Sparse buckets__ remains a meaningful term for the buckets
-  of a native histogram.
+- __native histogram__
+  - == NEW complex sample type's instance
+  - this document's goal
+- __classic histogram__
+  - == 👀OLD👀 sample type's instance
+  - == histogram / fixed buckets
+  - exists | exposition formats
+  - BEFORE ingesting | Prometheus,
+    - broken into SEVERAL float samples 
+- __Sparse histogram__ 
+  - _native histogram_'s deprecated name
+- __Sparse buckets__
+  - native histogram's buckets' term
 
 ## Data model
 
-This section describes the data model of native histograms in general. It
-avoids implementation specifics as far as possible. This includes terminology.
-For example, a _list_ described in this section will become a _repeated
-message_ in a protobuf implementation and (most likely) a _slice_ in a Go
-implementation.
+* goal
+  * native histogram's data model /
+    * no-implementation specific
 
 ### General structure
 
-Similar to a classic histogram, a native histogram has a field for the _count_
-of observations and a field for the _sum_ of observations. In addition, it
-contains the following components, which are described in detail in dedicated
-sections below:
-
-- A _schema_ to identify the method of determining the boundaries of any given
-  bucket with an index _i_.
-- A sparse representation of indexed buckets, mirrored for positive and
-  negative observations.
-- A _zero bucket_ to count observations close to zero.
-- A (possibly empty) list of _custom values_.
-- _Exemplars_.
+* native histogram's
+  * fields
+    * _count_
+    * _sum_
+  * components
+    - _schema_ to identify the method of determining the boundaries of any given
+      bucket with an index _i_.
+    - sparse representation of indexed buckets, mirrored for positive and
+      negative observations.
+    - _zero bucket_ to count observations close to zero.
+    - (possibly empty) list of _custom values_.
+    - _Exemplars_.
 
 ### Flavors
 

@@ -1,0 +1,29 @@
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--enable-feature=native-histograms'
+
+  # Go native histogram generator
+  go-histogram:
+    image: golang:1.23-alpine
+    container_name: go-native-histogram
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./native_histogram_example.go:/app/main.go
+    working_dir: /app
+    command: |
+      sh -c '
+      go mod init demo &&
+      go get github.com/prometheus/client_golang/prometheus@v1.19.1 &&
+      go get github.com/prometheus/client_golang/prometheus/promhttp@v1.19.1 &&
+      go run main.go
+      '
