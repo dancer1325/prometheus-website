@@ -118,93 +118,70 @@ sort_rank: 6
   * provide ALL lines -- as -- 1! group
   * FIRSTLY ALL OPTIONAL `HELP` and `TYPE` lines
 
-* recommendations
+* recommendations 
   * | "/metrics",
     * 👀metrics MUST appear ALWAYS | SAME order👀
       * OTHERWISE, the computational cost is prohibitive
 
 #### Histograms and summaries
 
-The `histogram` and `summary` types are difficult to represent in the text
-format. The following conventions apply:
-
-* The sample sum for a summary or histogram named `x` is given as a separate sample named `x_sum`.
-* The sample count for a summary or histogram named `x` is given as a separate sample named `x_count`.
-* Each quantile of a summary named `x` is given as a separate sample line with the same name `x` and a label `{quantile="y"}`.
-* Each bucket count of a histogram named `x` is given as a separate sample line with the name `x_bucket` and a label `{le="y"}` (where `y` is the upper bound of the bucket).
-* A histogram _must_ have a bucket with `{le="+Inf"}`. Its value _must_ be identical to the value of `x_count`.
-* The buckets of a histogram and the quantiles of a summary must appear in increasing numerical order of their label values (for the `le` or the `quantile` label, respectively).
-
-### Text format example
-
-* _Example:_ FULL-fledged Prometheus metric exposition (comments + `HELP` + `TYPE` expressions + histogram + summary + character escaping examples)
-
-```
-# HELP http_requests_total The total number of HTTP requests.
-# TYPE http_requests_total counter
-http_requests_total{method="post",code="200"} 1027 1395066363000
-http_requests_total{method="post",code="400"}    3 1395066363000
-
-# Escaping in label values:
-msdos_file_access_time_seconds{path="C:\\DIR\\FILE.TXT",error="Cannot find file:\n\"FILE.TXT\""} 1.458255915e9
-
-# Minimalistic line:
-metric_without_timestamp_and_labels 12.47
-
-# A weird metric from before the epoch:
-something_weird{problem="division by zero"} +Inf -3982045
-
-# A histogram, which has a pretty complex representation in the text format:
-# HELP http_request_duration_seconds A histogram of the request duration.
-# TYPE http_request_duration_seconds histogram
-http_request_duration_seconds_bucket{le="0.05"} 24054
-http_request_duration_seconds_bucket{le="0.1"} 33444
-http_request_duration_seconds_bucket{le="0.2"} 100392
-http_request_duration_seconds_bucket{le="0.5"} 129389
-http_request_duration_seconds_bucket{le="1"} 133988
-http_request_duration_seconds_bucket{le="+Inf"} 144320
-http_request_duration_seconds_sum 53423
-http_request_duration_seconds_count 144320
-
-# Finally a summary, which has a complex representation, too:
-# HELP rpc_duration_seconds A summary of the RPC duration in seconds.
-# TYPE rpc_duration_seconds summary
-rpc_duration_seconds{quantile="0.01"} 3102
-rpc_duration_seconds{quantile="0.05"} 3272
-rpc_duration_seconds{quantile="0.5"} 4773
-rpc_duration_seconds{quantile="0.9"} 9001
-rpc_duration_seconds{quantile="0.99"} 76656
-rpc_duration_seconds_sum 1.7560473e+07
-rpc_duration_seconds_count 2693
-```
+* conventions
+  * sample sum
+    * `x` -> `x_sum`
+  * sample count
+    * `x` -> `x_count`
+  * EACH summary's quantile | DIFFERENT line
+    * label `{quantile="y"}`
+  * EACH histogram's bucket | DIFFERENT line
+    * `x` -> `x_bucket{le="y", ...}`
+      * `y` == bucket's upper bound
+      * `x_bucket{le="+Inf"}`'s value == `x_count`
+  * histogram's buckets & summary's quantiles 
+    * appear | increasing numerical order of their label values
 
 ## OpenMetrics Text Format
 
 * [OpenMetrics](https://github.com/OpenObservability/OpenMetrics)
-  * is the an effort to standardize metric wire formatting built off of Prometheus text format
-* It is possible to scrape targets
-and it is also available to use for federating metrics since at least v2.23.0.
+  * goal
+    * standardize metric wire formatting 
+  * -- based on -- Prometheus text format
+  * allows
+    * scrape targets
+    * | v2.23.0,
+      * use | federating metrics 
+    * expose & query [Exemplars](https://github.com/prometheus/OpenMetrics/blob/v1.0.0/specification/OpenMetrics.md#exemplars) 
 
 ### Exemplars (Experimental)
 
-Utilizing the OpenMetrics format allows for the exposition and querying of [Exemplars](https://github.com/prometheus/OpenMetrics/blob/v1.0.0/specification/OpenMetrics.md#exemplars).
-Exemplars provide a point in time snapshot related to a metric set for an otherwise summarized MetricFamily. Additionally they may have a Trace ID attached to them which when used to together
-with a tracing system can provide more detailed information related to the specific service.
+* requirements
+  * Prometheus v2.26.0
+  * `--enable-feature=exemplar-storage` 
 
-To enable this experimental feature you must have at least version v2.26.0 and add `--enable-feature=exemplar-storage` to your arguments.
+* Exemplars
+  * provide
+    * metric set' snapshot
+    * Trace ID
+      * OPTIONAL
+  * uses |
+    * aggregated metrics 
+      * _Example:_ histogram OR summary  
 
 ## Protobuf format
 
-Earlier versions of Prometheus supported an exposition format based on [Protocol Buffers](https://developers.google.com/protocol-buffers/) (aka Protobuf) in addition to the current text-based format. With Prometheus 2.0, the Protobuf format was marked as deprecated and Prometheus stopped ingesting samples from said exposition format.
+* history
+  * | Prometheus earlier versions,
+    * supported 
+  * | Prometheus 2.0,
+    * deprecated
+    * Prometheus stopped ingesting samples
+  * | NEW experimental features,
+    * Protobuf format is the most viable option
+      * -> 👀Prometheus accept Protocol Buffers again👀
 
-However, new experimental features were added to Prometheus where the Protobuf format was considered the most viable option. Making Prometheus accept Protocol Buffers once again.
-
-Here is a list of experimental features that, once enabled, will configure Prometheus to favor the Protobuf exposition format:
-
-| feature flag | version that introduced it |
-|--------------|----------------------------|
-| native-histograms | 2.40.0 |
-| created-timestamp-zero-ingestion | 2.50.0 |
+| feature flag                     | version that introduced it  |
+|----------------------------------|-----------------------------|
+| native-histograms                | 2.40.0                      |
+| created-timestamp-zero-ingestion | 2.50.0                      |
 
 * [source code](https://github.com/prometheus/client_model)
 
