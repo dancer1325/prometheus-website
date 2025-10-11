@@ -78,12 +78,14 @@ Remote write Senders MUST encode the Write Request in the body of a HTTP POST re
 
 Timestamps MUST be int64 counted as milliseconds since the Unix epoch.  Values MUST be float64.
 
-The following headers MUST be sent with the HTTP request:
+* required HTTP headers
+  ```
+  Content-Encoding: snappy
+  Content-Type: application/x-protobuf
+  User-Agent: <name & version of the sender>
+  X-Prometheus-Remote-Write-Version: 0.1.0  
+  ```
 
-- `Content-Encoding: snappy`
-- `Content-Type: application/x-protobuf`
-- `User-Agent: <name & version of the sender>`
-- `X-Prometheus-Remote-Write-Version: 0.1.0`
 
 Clients MAY allow users to send custom HTTP headers; they MUST NOT allow users to configure them in such a way as to send reserved headers.  For more info see https://github.com/prometheus/prometheus/pull/8416.
 

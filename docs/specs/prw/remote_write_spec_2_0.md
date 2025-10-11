@@ -8,28 +8,46 @@ sort_rank: 2
 * Status: **Experimental**
 * Date: May 2024
 
-The Remote-Write specification, in general, is intended to document the standard for how Prometheus and Prometheus Remote-Write compatible senders send data to Prometheus or Prometheus Remote-Write compatible receivers.
+* Remote-Write specification 2.0
+  * goal
+    * standard for how Prometheus & Prometheus Remote-Write compatible senders send data -- to -- Prometheus or Prometheus Remote-Write compatible receivers
+    * how to implement backwards-compatible senders and receivers -- via -- existing basic content negotiation request headers 
+  * vs [Prometheus Remote-Write 1.0](remote_write_spec)
+    * | protocol and semantics,
+      * minor changes 
+    * new Protobuf Message / new features
+      * -> MORE use cases & wider adoption
+      * deprecates the [PREVIOUS Protobuf Message](remote_write_spec.md#protocol)
+      * adds mandatory [`X-Prometheus-Remote-Write-*-Written` HTTP response headers](#required-written-response-headers)
+  * [formal proposal](https://github.com/prometheus/proposals/pull/35)
+    * ⚠️EXPERIMENTAL == NOT agreed⚠️
 
-This document is intended to define a second version of the [Prometheus Remote-Write](/docs/specs/remote_write_spec) API with minor changes to protocol and semantics. This second version adds a new Protobuf Message with new features enabling more use cases and wider adoption on top of performance and cost savings. The second version also deprecates the previous Protobuf Message from a [1.0 Remote-Write specification](/docs/specs/remote_write_spec/#protocol) and adds mandatory [`X-Prometheus-Remote-Write-*-Written` HTTP response headers](#required-written-response-headers)for reliability purposes. Finally, this spec outlines how to implement backwards-compatible senders and receivers (even under a single endpoint) using existing basic content negotiation request headers. More advanced, automatic content negotiation mechanisms might come in a future minor version if needed. For the rationales behind the 2.0 specification, see [the formal proposal](https://github.com/prometheus/proposals/pull/35).
-
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119).
-
-> NOTE: This is a release candidate for Remote-Write 2.0 specification. This means that this specification is currently in an experimental state--no major changes are expected, but we reserve the right to break the compatibility if it's necessary, based on the early adopters' feedback. The potential feedback, questions and suggestions should be added as comments to the [PR with the open proposal](https://github.com/prometheus/proposals/pull/35).
+* keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" follow [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119)
 
 ## Introduction
 
 ### Background
 
-The Remote-Write protocol is designed to make it possible to reliably propagate samples in real-time from a sender to a receiver, without loss.
+* Remote-Write protocol
+  * goal
+    * propagate reliably samples in real-time FROM a sender -- to a -- receiver
+      * WITHOUT loss
+  * design
+    * stateless
+      * == EACH HTTP message is INDEPENDENT 
+  * ❌NOT ALLOWED❌
+    * "streaming"
+      * if you want a streaming effect -> send MULTIPLE messages -- over the -- SAME connection (_Example:_ HTTP/1.1 or HTTP/2)
+        * | those days,
+          * gRPC was NOT widely adopted
+  * ALLOW
+    * batching
+      * _Example:_ send MULTIPLE samples / different series -- via -- 1! request
+  * [test suite](https://github.com/prometheus/compliance/tree/main/remote_write_sender)
 
-<!---
-For the detailed rationales behind each 2.0 Remote-Write decision, see: https://github.com/prometheus/proposals/blob/alexg/remote-write-20-proposal/proposals/2024-04-09_remote-write-20.md
--->
-The Remote-Write protocol is designed to be stateless; there is strictly no inter-message communication. As such the protocol is not considered "streaming". To achieve a streaming effect multiple messages should be sent over the same connection using e.g. HTTP/1.1 or HTTP/2. "Fancy" technologies such as gRPC were considered, but at the time were not widely adopted, and it was challenging to expose gRPC services to the internet behind load balancers such as an AWS EC2 ELB.
-
-The Remote-Write protocol contains opportunities for batching, e.g. sending multiple samples for different series in a single request. It is not expected that multiple samples for the same series will be commonly sent in the same request, although there is support for this in the Protobuf Message.
-
-A test suite can be found at https://github.com/prometheus/compliance/tree/main/remote_write_sender. The compliance tests for remote write 2.0 compatibility are still [in progress](https://github.com/prometheus/compliance/issues/101).
+* Remote-Write 2.0 protocol
+  * [decisions](https://github.com/prometheus/proposals/blob/alexg/remote-write-20-proposal/proposals/2024-04-09_remote-write-20.md)
+  * [compliance tests](https://github.com/prometheus/compliance/issues/101)
 
 ### Glossary
 
@@ -61,7 +79,14 @@ The protobuf serialization MUST use either of the following Protobuf Messages:
 * The `prometheus.WriteRequest` introduced in [the Remote-Write 1.0 specification](./remote_write_spec.md#protocol). As of 2.0, this message is deprecated. It SHOULD be used only for compatibility reasons. Senders and Receivers MAY NOT support the `prometheus.WriteRequest`.
 * The `io.prometheus.write.v2.Request` introduced in this specification and defined [below](#protobuf-message). Senders and Receivers SHOULD use this message when possible. Senders and Receivers MUST support the `io.prometheus.write.v2.Request`.
 
-Protobuf Message MUST use binary Wire Format. Then, MUST be compressed with [Google’s Snappy](https://github.com/google/snappy). Snappy's [block format](https://github.com/google/snappy/blob/2c94e11145f0b7b184b831577c93e5a41c4c0346/format_description.txt) MUST be used -- [the framed format](https://github.com/google/snappy/blob/2c94e11145f0b7b184b831577c93e5a41c4c0346/framing_format.txt) MUST NOT be used.
+* Protobuf Message
+  * MUST 
+    * use 
+      * binary Wire Format
+      * Snappy's [block format](https://github.com/google/snappy/blob/2c94e11145f0b7b184b831577c93e5a41c4c0346/format_description.txt) 
+    * 👀compressed -- with -- [Google’s Snappy](https://github.com/google/snappy)👀 
+    * ❌NOT use❌ 
+      * [framed format](https://github.com/google/snappy/blob/2c94e11145f0b7b184b831577c93e5a41c4c0346/framing_format.txt)
 
 Senders MUST send a serialized and compressed Protobuf Message in the body of an HTTP POST request and send it to the Receiver via HTTP at the provided URL path. Receivers MAY specify any HTTP URL path to receive metrics.
 
@@ -77,16 +102,19 @@ Senders MUST send the following reserved headers with the HTTP request:
 
 Senders MAY allow users to add custom HTTP headers; they MUST NOT allow users to configure them in such a way as to send reserved headers.
 
-#### Content-Encoding
+#### -H Content-Encoding 
 
 ```
 Content-Encoding: <compression>
 ```
 
-<!---
-Rationales: https://github.com/prometheus/proposals/blob/alexg/remote-write-20-proposal/proposals/2024-04-09_remote-write-20.md#no-new-compression-added--yet-
--->
-Content encoding request header MUST follow [the RFC 9110](https://www.rfc-editor.org/rfc/rfc9110.html#name-content-encoding). Senders MUST use the `snappy` value. Receivers MUST support `snappy` compression. New, optional compression algorithms might come in 2.x or beyond.
+* see [here](https://github.com/prometheus/proposals/blob/alexg/remote-write-20-proposal/proposals/2024-04-09_remote-write-20.md#no-new-compression-added--yet-)
+* MUST follow [the RFC 9110](https://www.rfc-editor.org/rfc/rfc9110.html#name-content-encoding)
+* ALLOWED `<compression>` values
+  * `snappy`
+    * -> ⚠️Receivers MUST support `snappy` compression⚠️
+  * | 2.x,
+    * other values might come 
 
 #### Content-Type
 
@@ -215,137 +243,16 @@ The 2.x protocol is breaking compatibility with 1.x by introducing a new, mandat
 
 ### `io.prometheus.write.v2.Request`
 
-The `io.prometheus.write.v2.Request` references the new Protobuf Message that's meant to replace and deprecate the Remote-Write 1.0's `prometheus.WriteRequest` message.
-
-<!---
-TODO(bwplotka): Move link to the one on Prometheus main or even buf.
--->
-The full schema and source of the truth is in Prometheus repository in [`prompb/io/prometheus/write/v2/types.proto`](https://github.com/prometheus/prometheus/blob/remote-write-2.0/prompb/io/prometheus/write/v2/types.proto#L32). The `gogo` dependency and options CAN be ignored ([will be removed eventually](https://github.com/prometheus/prometheus/issues/11908)). They are not part of the specification as they don't impact the serialized format.
-
-The simplified version of the new `io.prometheus.write.v2.Request` is presented below.
-
-```
-// Request represents a request to write the given timeseries to a remote destination.
-message Request {
-  // Since Request supersedes 1.0 spec's prometheus.WriteRequest, we reserve the top-down message
-  // for the deterministic interop between those two.
-  // Generally it's not needed, because Receivers must use the Content-Type header, but we want to
-  // be sympathetic to adopters with mistaken implementations and have deterministic error (empty
-  // message if you use the wrong proto schema).
-  reserved 1 to 3;
-
-  // symbols contains a de-duplicated array of string elements used for various
-  // items in a Request message, like labels and metadata items. For the sender's convenience
-  // around empty values for optional fields like unit_ref, symbols array MUST start with
-  // empty string.
-  //
-  // To decode each of the symbolized strings, referenced, by "ref(s)" suffix, you
-  // need to lookup the actual string by index from symbols array. The order of
-  // strings is up to the sender. The receiver should not assume any particular encoding.
-  repeated string symbols = 4;
-  // timeseries represents an array of distinct series with 0 or more samples.
-  repeated TimeSeries timeseries = 5;
-}
-
-// TimeSeries represents a single series.
-message TimeSeries {
-  // labels_refs is a list of label name-value pair references, encoded
-  // as indices to the Request.symbols array. This list's length is always
-  // a multiple of two, and the underlying labels should be sorted lexicographically.
-  //
-  // Note that there might be multiple TimeSeries objects in the same
-  // Requests with the same labels e.g. for different exemplars, metadata
-  // or created timestamp.
-  repeated uint32 labels_refs = 1;
-
-  // Timeseries messages can either specify samples or (native) histogram samples
-  // (histogram field), but not both. For a typical sender (real-time metric
-  // streaming), in healthy cases, there will be only one sample or histogram.
-  //
-  // Samples and histograms are sorted by timestamp (older first).
-  repeated Sample samples = 2;
-  repeated Histogram histograms = 3;
-
-  // exemplars represents an optional set of exemplars attached to this series' samples.
-  repeated Exemplar exemplars = 4;
-
-  // metadata represents the metadata associated with the given series' samples.
-  Metadata metadata = 5;
-
-  // created_timestamp represents an optional created timestamp associated with
-  // this series' samples in ms format, typically for counter or histogram type
-  // metrics. Created timestamp represents the time when the counter started
-  // counting (sometimes referred to as start timestamp), which can increase
-  // the accuracy of query results.
-  //
-  // Note that some receivers might require this and in return fail to
-  // write such samples within the Request.
-  //
-  // For Go, see github.com/prometheus/prometheus/model/timestamp/timestamp.go
-  // for conversion from/to time.Time to Prometheus timestamp.
-  //
-  // Note that the "optional" keyword is omitted due to
-  // https://cloud.google.com/apis/design/design_patterns.md#optional_primitive_fields
-  // Zero value means value not set. If you need to use exactly zero value for
-  // the timestamp, use 1 millisecond before or after.
-  int64 created_timestamp = 6;
-}
-
-// Exemplar represents additional information attached to some series' samples.
-message Exemplar {
-  // labels_refs is an optional list of label name-value pair references, encoded
-  // as indices to the Request.symbols array. This list's len is always
-  // a multiple of 2, and the underlying labels should be sorted lexicographically.
-  // If the exemplar references a trace it should use the `trace_id` label name, as a best practice.
-  repeated uint32 labels_refs = 1;
-  // value represents an exact example value. This can be useful when the exemplar
-  // is attached to a histogram, which only gives an estimated value through buckets.
-  double value = 2;
-  // timestamp represents the timestamp of the exemplar in ms.
-  // For Go, see github.com/prometheus/prometheus/model/timestamp/timestamp.go
-  // for conversion from/to time.Time to Prometheus timestamp.
-  int64 timestamp = 3;
-}
-
-// Sample represents series sample.
-message Sample {
-  // value of the sample.
-  double value = 1;
-  // timestamp represents timestamp of the sample in ms.
-  int64 timestamp = 2;
-}
-
-// Metadata represents the metadata associated with the given series' samples.
-message Metadata {
-  enum MetricType {
-    METRIC_TYPE_UNSPECIFIED    = 0;
-    METRIC_TYPE_COUNTER        = 1;
-    METRIC_TYPE_GAUGE          = 2;
-    METRIC_TYPE_HISTOGRAM      = 3;
-    METRIC_TYPE_GAUGEHISTOGRAM = 4;
-    METRIC_TYPE_SUMMARY        = 5;
-    METRIC_TYPE_INFO           = 6;
-    METRIC_TYPE_STATESET       = 7;
-  }
-  MetricType type = 1;
-  // help_ref is a reference to the Request.symbols array representing help
-  // text for the metric. Help is optional, reference should point to an empty string in
-  // such a case.
-  uint32 help_ref = 3;
-  // unit_ref is a reference to the Request.symbols array representing a unit
-  // for the metric. Unit is optional, reference should point to an empty string in
-  // such a case.
-  uint32 unit_ref = 4;
-}
-
-// A native histogram, also known as a sparse histogram.
-// See https://github.com/prometheus/prometheus/blob/remote-write-2.0/prompb/io/prometheus/write/v2/types.proto#L142
-// for a full message that follows the native histogram spec for both sparse
-// and exponential, as well as, custom bucketing.
-message Histogram { ... }
-```
-
-All timestamps MUST be int64 counted as milliseconds since the Unix epoch. Sample's values MUST be float64.
+* == NEW Protobuf Message /
+  * 👀replace & deprecate the Remote-Write 1.0's `prometheus.WriteRequest` message👀
+  * [`prompb/io/prometheus/write/v2/types.proto`](https://github.com/prometheus/prometheus/blob/remote-write-2.0/prompb/io/prometheus/write/v2/types.proto#L32)
+    * source code
+  * `gogo` dependency & options
+    * [will be removed eventually](https://github.com/prometheus/prometheus/issues/11908)
+  * ALL timestamps
+    * MUST be int64 / milliseconds -- since the -- Unix epoch
+  * Sample's values
+    * MUST be float64
 
 For every `TimeSeries` message:
 

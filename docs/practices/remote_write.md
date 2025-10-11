@@ -12,9 +12,10 @@ sort_rank: 8
 * WAL (Write-Ahead Log)
   * == long storage -- for -- ALL samples
   * uses
-    * remote write's 1! data
+    * 👀remote write's 1! data👀
+      * Reason:🧠Prometheus read them & remote write -- to -- remote storages🧠
   * durability
-    * == NO lose data
+    * == ❌NO lose data❌
 
 * Shards
   * == units of parallelism /
