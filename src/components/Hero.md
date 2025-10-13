@@ -12,7 +12,7 @@
   * open source
   * use cases
     * alerting
-    * dashboard
+    * visualize
   * [active ecosystem](/prometheus-website/src/app/community)
   * history
     * | 2012, built | [SoundCloud](http://soundcloud.com) 
