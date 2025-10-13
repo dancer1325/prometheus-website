@@ -211,9 +211,8 @@ good choice.
 
 ### Scope
 
-Nagios is primarily about alerting based on the exit codes of scripts. These are
-called “checks”. There is silencing of individual alerts, however no grouping,
-routing or deduplication.
+* alerting
+  * -- based on the -- exit codes of scripts
 
 There are a variety of plugins. For example, piping the few kilobytes of
 perfData plugins are allowed to return [to a time series database such as Graphite](https://github.com/shawn-sterling/graphios) or using NRPE to [run checks on remote machines](https://exchange.nagios.org/directory/Addons/Monitoring-Agents/NRPE--2D-Nagios-Remote-Plugin-Executor/details).

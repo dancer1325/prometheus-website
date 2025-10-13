@@ -5,7 +5,7 @@
     * -> 
       * flexible
         * Reason: 
-          * 🧠you can modify the dimensions🧠
+          * 🧠you can modify the dimensions == you can modify the columns🧠
       * powerful
         * easier queries
 

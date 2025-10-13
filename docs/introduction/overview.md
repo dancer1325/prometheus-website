@@ -25,8 +25,8 @@ sort_rank: 1
   * allows
     * understand your application 
 
-* term time series
-  * == recording of changes | time
+* time series
+  * == metrics | time
 
 * what to measure
   * depend -- on -- EACH application

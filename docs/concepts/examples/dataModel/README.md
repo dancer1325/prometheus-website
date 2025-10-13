@@ -29,7 +29,8 @@
     * [sample.http](sample.http)
 
 ### calculated on-fly | Prometheus query results
-* `rate(prometheus_http_requests_total[5m])`
+* `rate(prometheus_http_requests_total{handler="/api/v1/label/:name/values"}[5m])`
+  * execute CONTINUOUSLY -> value changes
 
 ## 's notation
 ### `<metric name>{<label name>=<label value>, ...}`
