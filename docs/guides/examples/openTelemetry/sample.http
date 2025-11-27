@@ -1,0 +1,7 @@
+###
+POST http://localhost:9090/api/v1/otlp/v1/metrics
+
+###
+POST http://localhost:9090/api/v1/otlp/v1/metrics
+Content-Type: application/x-protobuf
+Content-Length: 0
